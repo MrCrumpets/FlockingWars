@@ -1,0 +1,3 @@
+#include "resource.h"
+
+FLOCKINGWARSICO ICON "../src/Resources/icons/flockingwars_256.ico"
