@@ -63,6 +63,15 @@ public:
 				z -= a.z;
 				return *this;
 	}
+
+	bool operator==(const Vec3f &a) const {
+		return a.x == x && a.y == y && a.z == z;
+	}
+
+	bool operator!=(const Vec3f &a) const {
+		return !(*this == a);
+	}
+
 	float dot(Vec3f a){
 		return x*a.x + y*a.y + z*a.z;
 	}
