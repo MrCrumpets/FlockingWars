@@ -11,8 +11,6 @@
 #include "math.h"
 #include <iostream>
 
-using namespace std;
-
 class Mat4 {
 public:
 	Mat4(){

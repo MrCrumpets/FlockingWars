@@ -172,17 +172,19 @@ void GameLevel::handleInput(MappedInput& inputs, int x, int y, bool mouseDown){
 	if(inputs.states.find(Input::S_ROTATE_RIGHT) != inputs.states.end()){
 		player->rotate(-1.f);
 	}
+
+	cursor.pos = renderer->getCursorPos(x, y);
 	if(inputs.actions.find(Input::A_LEFT_MOUSE_PRESS) != inputs.actions.end())
 		cursor.pressed = cursor.pos;
 
-	if(inputs.states.find(Input::S_DRAGGING) != inputs.states.end())
+	if(inputs.states.find(Input::S_LEFT_DOWN) != inputs.states.end() && cursor.pos != cursor.pressed)
 		cursor.dragging = true;
 	else
 		cursor.dragging = false;
 
-	cursor.pos = renderer->getCursorPos(x, y);
-	if(inputs.actions.find(Input::A_LEFT_MOUSE_RELEASE) != inputs.actions.end())
+	if(inputs.actions.find(Input::A_LEFT_MOUSE_RELEASE) != inputs.actions.end()){
 		selectedFlock->setObjective(cursor.pos);
+	}
 
 }
 

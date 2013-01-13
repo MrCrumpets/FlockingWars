@@ -2,7 +2,6 @@
 #define INIT_H_
 
 #include "GL/glew.h"
-#include "SDL/SDL_ttf.h"
 #include <string>
 #include <iostream>
 #include "text.h"
@@ -18,6 +17,6 @@ GLuint loadTexture(std::string filename);
 
 bool init_GL(int width, int height);
 
-void generateGlyphs(TTF_Font* mainFont, int numChars, Glyph* glyphs);
+//void generateGlyphs(TTF_Font* mainFont, int numChars, Glyph* glyphs);
 
 #endif

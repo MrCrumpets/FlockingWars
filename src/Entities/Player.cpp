@@ -59,21 +59,14 @@ Player::Player(Vec3f _pos, float _size) {
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-//    glEnable(GL_CULL_FACE);
-//    glCullFace(GL_BACK);
-//    glFrontFace(GL_CW);
 }
 
 void Player::render(Renderer* r){
 	r->pushMatrix();
-    size_t colorData = sizeof(vertexData) / 2;
+	r->setColor(1.0f, 0.0f, 0.0f, 1.0f);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 	glEnableVertexAttribArray(0);
-//	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-//	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)colorData);
-//	r->translate(pos.x, pos.y, 0.0f);
 	r->rotate(dir.theta(), 0.0f, 0.0f, 1.0f);
 	r->applyCamera();
 	r->translate(pos.x, pos.y, 0.0f);
@@ -82,6 +75,7 @@ void Player::render(Renderer* r){
 	glDisableVertexAttribArray(0);
 //	glDisableVertexAttribArray(1);
 	r->popMatrix();
+	r->setColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 /*

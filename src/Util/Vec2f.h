@@ -53,9 +53,9 @@ public:
 	void zero(){
 		x = y= 0.0f;
 	}
-	void random(int max){
-		x = rand()%max; y = rand()%max;
-	}
+//	void random(int max){
+//		x = rand()%max; y = rand()%max;
+//	}
 	float lengthSq(){
 		return x*x + y*y;
 	}

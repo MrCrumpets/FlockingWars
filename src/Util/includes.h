@@ -13,10 +13,6 @@
 #define PI 3.14159
 
 #include "GL/glew.h"
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "SDL/SDL_mixer.h"
-#include "SDL/SDL_ttf.h"
 #include "math.h"
 #include "Vec2f.h"
 #include "Vec3f.h"
@@ -41,7 +37,6 @@ extern GLuint glowTex;
 extern GLuint buttonTex;
 extern GLuint shipMesh;
 extern GLuint attackBoidMesh;
-extern TTF_Font* mainFont;
 extern int damaged;
 const unsigned char OTHER = 0, PLAYER = 1, ENEMY = 2;
 const unsigned char SHIP = 0, SPAWNER = 1, BOID = 2, BULLET = 3, ATTACKBOID = 4, EXPLOSION = 5;

@@ -11,6 +11,7 @@
 #include "../util/includes.h"
 #include "boost/signal.hpp"
 #include "boost/bind.hpp"
+#include "boost/function.hpp"
 #include <string>
 using std::vector;
 

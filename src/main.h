@@ -10,10 +10,6 @@
 
 #define DRAWMODE GL_LINE_LOOP
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "SDL/SDL_mixer.h"
-#include "SDL/SDL_ttf.h"
 #include "math.h"
 #include <string>
 #include <iostream>
@@ -23,7 +19,6 @@
 #include "Entities/Player.h"
 #include "Entities/Explosion.h"
 #include "InteractiveMesh.h"
-#include "Util/Vec2f.h"
 #include "Systems/UserInterface.h"
 
 int width;

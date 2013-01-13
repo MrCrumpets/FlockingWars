@@ -11,10 +11,9 @@
  *      Author: Nathan
  */
 
-#ifndef INPUTMANGER_H_
-#define INPUTMANGER_H_
+#ifndef INPUTMANAGER_H_
+#define INPUTMANAGER_H_
 
-#include "SDL/SDL.h"
 #include "InputConstants.h"
 #include <iostream>
 #include <map>
@@ -93,4 +92,4 @@ class InputContext {
 		std::map<int, State> stateMap;
 };
 
-#endif /* INPUTMANGER_H_ */
+#endif /* INPUTMANAGER_H_ */

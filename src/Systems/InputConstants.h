@@ -31,7 +31,7 @@ namespace Input {
 		S_THRUST,	// 2
 		S_SHOOT, 	// 3
 		S_REV, 		// 4
-		S_DRAGGING, // 5
+		S_LEFT_DOWN, // 5
 	};
 
 }

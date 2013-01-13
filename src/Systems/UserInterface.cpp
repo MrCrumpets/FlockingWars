@@ -80,10 +80,10 @@ Button::Button(Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, char* _text, fl
 	//size.x = stringWidth(text, scale)+2*padding;
 	//size.y = stringHeight(text, scale)+padding;
 	pos.x -= size.x/2;
-	textDl = glGenLists(1);
-	glNewList(textDl, GL_COMPILE);
-	renderString(text, pos.x+padding, pos.y+size.y/2-padding, 0, scale);
-	glEndList();
+//	textDl = glGenLists(1);
+//	glNewList(textDl, GL_COMPILE);
+//	renderString(text, pos.x+padding, pos.y+size.y/2-padding, 0, scale);
+//	glEndList();
 }
 void Button::draw(){
 	if(hover && hoverTime < 30)
