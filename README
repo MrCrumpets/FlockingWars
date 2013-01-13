@@ -1,3 +1,15 @@
 This is a project I started a couple years ago for fun which turned into a class project
 and then an entry to a competition and then got abandoned with minimal tinkerage over the past year
 and a half. I've done a not insignificant amount of work on it recently so I decided to post it here.
+
+How to build:
+
+I don't have time to write up an elaborate build procedue but I will list the dependencies (AFAIK) so you
+can try your luck.
+
+boost::signals 1.52
+SDL 1.2 (SDL_image, SDL_ttf, SDL_mixer)
+GLEW
+
+I'm tentatively thinking of dropping SDL in favour of SFML cause it hasn't really been a pleasure to work
+with and SFML looks to be more C++ friendly.
