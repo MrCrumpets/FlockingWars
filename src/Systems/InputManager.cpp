@@ -13,7 +13,6 @@
 #include <fstream>
 #include <vector>
 
-using namespace Input;
 using std::cout;
 using std::endl;
 

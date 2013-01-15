@@ -11,7 +11,6 @@
 
 #include "stdlib.h"
 #include "Util/init.h"
-#include "Util/text.h"
 #include "Util/Mat4.h"
 
 sf::Window sfmlWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars");
@@ -59,6 +58,7 @@ bool init() {
 	if (init_GL(SCREEN_WIDTH, SCREEN_HEIGHT) == false) {
 		return false;
 	}
+
 	srand(time(NULL));//Initialize random generator
 
 	// Load Shaders

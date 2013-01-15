@@ -14,7 +14,6 @@
 #ifndef INPUTMANAGER_H_
 #define INPUTMANAGER_H_
 
-#include "InputConstants.h"
 #include "rapidxml.hpp"
 #include <iostream>
 #include <map>
@@ -24,7 +23,6 @@
 
 using std::map;
 using rapidxml::xml_node;
-using namespace Input;
 class InputContext;
 
 typedef std::string Action;
