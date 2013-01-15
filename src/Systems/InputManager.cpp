@@ -8,7 +8,7 @@
  */
 
 #include "InputManager.h"
-#include "SFML/Window/Event.hpp"
+#include "SFML/Window/Keyboard.hpp"
 #include "rapidxml.hpp"
 #include <fstream>
 #include <vector>
@@ -19,9 +19,9 @@ using std::endl;
 using namespace rapidxml;
 xml_document<> doc;
 
-std::map<std::string, sf::Key::Code>& keyStrings()
+std::map<std::string, sf::Keyboard::Key>& keyStrings()
 {
-  static std::map<std::string, sf::Key::Code> *map = new std::map<std::string, sf::Key::Code>();
+  static std::map<std::string, sf::Keyboard::Key> *map = new std::map<std::string, sf::Keyboard::Key>();
   return *map;
 }
 
@@ -50,8 +50,12 @@ InputManager::InputManager() {
 }
 
 void InputManager::registerButtonStrings(){
-	keyStrings()["escape"] = sf::Key::Escape;
-	keyStrings()["space"] = sf::Key::Space;
+	keyStrings()["escape"] = sf::Keyboard::Escape;
+	keyStrings()["space"] = sf::Keyboard::Space;
+	keyStrings()["w"] = sf::Keyboard::W;
+	keyStrings()["a"] = sf::Keyboard::A;
+	keyStrings()["s"] = sf::Keyboard::S;
+	keyStrings()["d"] = sf::Keyboard::D;
 }
 
 inline int getKey(const std::string &string){

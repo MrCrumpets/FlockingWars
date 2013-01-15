@@ -53,7 +53,6 @@ void inputCallback (MappedInput& inputs);
 using namespace std;
 
 bool init() {
-	sfmlWindow.SetActive();
 	//Initialize OpenGL
 	if (init_GL(SCREEN_WIDTH, SCREEN_HEIGHT) == false) {
 		return false;
@@ -69,12 +68,6 @@ bool init() {
 	inputManager.pushContext("gameplay");
 	return true;
 }
-/**
- * clean_up() releases all the memory that isn't automatically released and shuts SDL down.
- */
-void clean_up() {
-}
-
 
 void inputCallback (MappedInput& inputs){
 	if(inputs.actions.find("quit") != inputs.actions.end()){
@@ -87,22 +80,21 @@ void inputCallback (MappedInput& inputs){
 
 void pollEvents(){
 	sf::Event event;
-	while (sfmlWindow.GetEvent(event)) {
-		switch(event.Type){
+	while (sfmlWindow.pollEvent(event)) {
+		switch(event.type){
 		case sf::Event::Closed:
 			quit = true;
 		break;
 		case sf::Event::MouseMoved:
-			mousex = event.MouseMove.X;
-			mousey = SCREEN_HEIGHT - event.MouseMove.Y;
+			mousex = event.mouseMove.x;
+			mousey = SCREEN_HEIGHT - event.mouseMove.y;
 			break;
 		case sf::Event::KeyPressed:
-			keys[event.Key.Code] = true;
-//			cout << (char)event.Key.Code << endl;
+			keys[event.key.code] = true;
 			break;
 		case sf::Event::KeyReleased:
-			inputManager.setRawInputState(event.Key.Code, false); // Tell inputManager that the key was released.
-			keys[event.Key.Code] = false;
+			inputManager.setRawInputState(event.key.code, false); // Tell inputManager that the key was released.
+			keys[event.key.code] = false;
 			break;
 		}
 	}
@@ -125,32 +117,29 @@ int main() {
 	sf::Clock clock;
 	currentState = new Menu(SCREEN_WIDTH, SCREEN_HEIGHT);
 	currentState->init();
-	float deltatime = 1;
+	sf::Time deltatime;
 	cout << "Entering main loop" << endl;
 	while (quit == false) {
 		pollEvents();
 		inputManager.dispatchInput();
 		inputManager.clear();
-		clock.Reset();
-		GameState* newState = currentState->update(deltatime);
+		clock.restart();
+		GameState* newState = currentState->update(deltatime.asSeconds());
 		if(newState != currentState){
 			delete currentState;
 			currentState = newState;
 			currentState->init();
 		}
 		currentState->render();
-		deltatime = clock.GetElapsedTime();
+		deltatime = clock.getElapsedTime();
 
 		//Sleep the time remaining for a constant framerate to be maintained
-		sfmlWindow.Display();
+		sfmlWindow.display();
+//		cout << deltatime.asMicroseconds() << " " << deltatime.asMilliseconds() << " " << deltatime.asSeconds() << endl;
 		float target_fps = 30.0f;
-		float sleeptime = 1.0f/target_fps - deltatime;
-		float actual_fps = 1.0f/deltatime;
-		sf::Sleep(sleeptime);
+		sf::Time sleeptime = sf::seconds(1.0f/target_fps) - deltatime;
+		sf::sleep(sleeptime);
 	}
-	//Free memory and quit SDL
-	clean_up();
-//	ctt.close();
 	cout << "All done here." << endl;
 	return 0;
 }
