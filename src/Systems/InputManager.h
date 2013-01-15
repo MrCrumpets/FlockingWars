@@ -15,6 +15,7 @@
 #define INPUTMANAGER_H_
 
 #include "InputConstants.h"
+#include "rapidxml.hpp"
 #include <iostream>
 #include <map>
 #include <string>
@@ -22,9 +23,12 @@
 #include <set>
 
 using std::map;
+using rapidxml::xml_node;
 using namespace Input;
 class InputContext;
 
+typedef std::string Action;
+typedef std::string State;
 
 /**
  * Current input mapping. Holds all the states and actions that have occurred since last poll.
@@ -73,9 +77,10 @@ class InputManager {
 	private:
 		std::map<std::string, InputContext*> inputContexts;
 		std::list<InputContext*> activeContexts;
-
 		std::multimap<int, InputCallback> callbackTable;
 
+		void registerButtonStrings();
+		int getKey(const std::string &string);
 		MappedInput currentMap;
 		bool keysDown[323];
 		int mousex, mousey;
@@ -83,7 +88,7 @@ class InputManager {
 
 class InputContext {
 	public:
-		InputContext (std::string fileName);
+		InputContext (xml_node<>* context);
 		bool mapButtonToAction(int button, Action& out) const;
 		bool mapButtonToState(int button, State& out) const;
 		virtual ~InputContext();

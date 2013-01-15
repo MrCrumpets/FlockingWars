@@ -8,24 +8,57 @@
  */
 
 #include "InputManager.h"
-#include "ResourceManager/FileIO.h"
+#include "SFML/Window/Event.hpp"
+#include "rapidxml.hpp"
 #include <fstream>
+#include <vector>
 
 using namespace Input;
 using std::cout;
 using std::endl;
 
+using namespace rapidxml;
+xml_document<> doc;
+
+std::map<std::string, sf::Key::Code>& keyStrings()
+{
+  static std::map<std::string, sf::Key::Code> *map = new std::map<std::string, sf::Key::Code>();
+  return *map;
+}
+
 InputManager::InputManager() {
-	keys = { false };
-	unsigned count = 0;
-	std::ifstream infile("res/config/contexts");
-	count = readData<int>(infile);
-	cout << count << endl;
-	for(unsigned i = 0; i < count; i++){
-		std::string name = readData<std::string>(infile);
-		std::string fileName = readData<std::string>(infile);
-		inputContexts[name] = new InputContext(fileName);
+	std::cout << "Parsing key mapping" << std::endl;
+	registerButtonStrings();
+//	std::cout << "pop: " << keyStrings["poop"] << std::endl;
+	std::ifstream infile("res/config/keys.xml");
+	std::vector<char> buffer((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
+	buffer.push_back('\0');
+	try
+	{
+	    doc.parse<0>(&buffer[0]);
 	}
+	catch(rapidxml::parse_error &e)
+	{
+		std::cout << "XML parse error." << std::endl;
+		std::cout << e.what() << std::endl << e.where<char>() << std::endl;
+		throw;
+	}
+	for (xml_node<> *node = doc.first_node();
+			node; node = node->next_sibling())
+	{
+		inputContexts[node->first_attribute()->value()] = new InputContext(node);
+	}
+}
+
+void InputManager::registerButtonStrings(){
+	keyStrings()["escape"] = sf::Key::Escape;
+	keyStrings()["space"] = sf::Key::Space;
+}
+
+inline int getKey(const std::string &string){
+	if(keyStrings().find(string) != keyStrings().end())
+		return keyStrings()[string];
+	return static_cast<int>(string[0]);
 }
 
 void InputManager::clear(){
@@ -110,23 +143,27 @@ void InputManager::mapAndEat(int button){
 	keys[button] = false;
 }
 
-InputContext::InputContext(std::string fileName){
-	std::ifstream contextFile((std::string("res/config/") + fileName).c_str());
+InputContext::InputContext(xml_node<> *context){
+	std::cout << "first context: " << context->first_attribute()->value() <<  std::endl;
+	xml_node<> *keymap = context->first_node();
 	// Read States
-	unsigned numStates = readData<unsigned>(contextFile);
-	for(unsigned i = 0; i < numStates; i++)
+	for(xml_node<> *node = keymap->first_node();
+			node; node = node->next_sibling())
 	{
-		int button = static_cast<int>(readData<int>(contextFile));
-		State state = static_cast<State>(readData<int>(contextFile));
-		stateMap[button] = state;
+		std::cout << node->first_attribute()->value() << std::endl;
+		int key = getKey(node->first_attribute()->value());
+		State state (node->first_attribute()->next_attribute()->value());
+		stateMap[key] = state;
 	}
+	keymap = keymap->next_sibling();
 	// Read Actions
-	unsigned numActions = readData<unsigned>(contextFile);
-	for(unsigned i = 0; i < numActions; i++)
+	for(xml_node<> *node = keymap->first_node();
+			node; node = node->next_sibling())
 	{
-		int button = static_cast<int>(readData<int>(contextFile));
-		Action action = static_cast<Action>(readData<int>(contextFile));
-		actionMap[button] = action;
+		std::cout << node->first_attribute()->value() << std::endl;
+		int key = getKey(node->first_attribute()->value());
+		Action action (node->first_attribute()->next_attribute()->value());
+		actionMap[key] = action;
 	}
 }
 

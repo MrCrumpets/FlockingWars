@@ -42,7 +42,7 @@ void Menu::render(){
 }
 
 void Menu::handleInput(MappedInput& inputs, int x, int y, bool _mouseDown){
-	if(inputs.actions.find(Input::A_LEFT_MOUSE_PRESS) != inputs.actions.end()){
+	if(inputs.actions.find("left_mouse_down") != inputs.actions.end()){
 		ui->mouseUp();
 	}
 }

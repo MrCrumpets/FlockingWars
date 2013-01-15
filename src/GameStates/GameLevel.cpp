@@ -160,29 +160,29 @@ void GameLevel::renderCursor(Renderer* r){
 }
 
 void GameLevel::handleInput(MappedInput& inputs, int x, int y, bool mouseDown){
-	if(inputs.states.find(Input::S_SHOOT) != inputs.states.end()){
+	if(inputs.states.find("shoot") != inputs.states.end()){
 		player->shoot();
 	}
-	if(inputs.states.find(Input::S_THRUST) != inputs.states.end()){
+	if(inputs.states.find("thrust") != inputs.states.end()){
 		player->accelerate(1.f);
 	}
-	if(inputs.states.find(Input::S_ROTATE_LEFT) != inputs.states.end()){
+	if(inputs.states.find("rotate_left") != inputs.states.end()){
 		player->rotate(1.f);
 	}
-	if(inputs.states.find(Input::S_ROTATE_RIGHT) != inputs.states.end()){
+	if(inputs.states.find("rotate_right") != inputs.states.end()){
 		player->rotate(-1.f);
 	}
 
 	cursor.pos = renderer->getCursorPos(x, y);
-	if(inputs.actions.find(Input::A_LEFT_MOUSE_PRESS) != inputs.actions.end())
+	if(inputs.actions.find("left_mouse_press") != inputs.actions.end())
 		cursor.pressed = cursor.pos;
 
-	if(inputs.states.find(Input::S_LEFT_DOWN) != inputs.states.end() && cursor.pos != cursor.pressed)
+	if(inputs.states.find("left_mouse_down") != inputs.states.end() && cursor.pos != cursor.pressed)
 		cursor.dragging = true;
 	else
 		cursor.dragging = false;
 
-	if(inputs.actions.find(Input::A_LEFT_MOUSE_RELEASE) != inputs.actions.end()){
+	if(inputs.actions.find("left_mouse_release") != inputs.actions.end()){
 		selectedFlock->setObjective(cursor.pos);
 	}
 

@@ -3,19 +3,16 @@
 #include "main.h"
 #include <SFML/Window.hpp>
 #include "Systems/InputManager.h"
+#include "Systems/Graphics/Shaders/shaders.h"
+#include "Systems/ResourceManager/Manager.h"
 #include "GameStates/GameState.h"
 #include "GameStates/GameLevel.h"
 #include "GameStates/Menu.h"
 
-#include <sstream>
-#include <fstream>
-#include <direct.h>
 #include "stdlib.h"
-#include "time.h"
 #include "Util/init.h"
 #include "Util/text.h"
 #include "Util/Mat4.h"
-#include "Systems/Graphics/Shaders/shaders.h"
 
 sf::Window sfmlWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars");
 
@@ -56,11 +53,6 @@ void inputCallback (MappedInput& inputs);
 
 using namespace std;
 
-/**
- * init() initalizes SDL, creating a fullscreen window, and initalizes all the game objects
- * @return
- * 		bool flag stating whether the init succeeded with errors or not.
- */
 bool init() {
 	sfmlWindow.SetActive();
 	//Initialize OpenGL
@@ -85,7 +77,7 @@ void clean_up() {
 
 
 void inputCallback (MappedInput& inputs){
-	if(inputs.actions.find(Input::A_QUIT_GAME) != inputs.actions.end()){
+	if(inputs.actions.find("quit") != inputs.actions.end()){
 		quit = true;
 	}
 	if(currentState != NULL){
@@ -106,20 +98,12 @@ void pollEvents(){
 			break;
 		case sf::Event::KeyPressed:
 			keys[event.Key.Code] = true;
-			cout << event.Key.Code << endl;
+//			cout << (char)event.Key.Code << endl;
 			break;
 		case sf::Event::KeyReleased:
 			inputManager.setRawInputState(event.Key.Code, false); // Tell inputManager that the key was released.
 			keys[event.Key.Code] = false;
 			break;
-//		case SDL_MOUSEBUTTONDOWN:
-//			keys[0] = true;
-//			keys[1] = false;
-//			break;
-//		case SDL_MOUSEBUTTONUP:
-//			keys[0] = false;
-//			keys[1] = true;
-//			break;
 		}
 	}
 	// Register input for all keys currently down.
@@ -130,12 +114,9 @@ void pollEvents(){
 	}
 }
 
-/**
- * Main method. Calls all the init functions, loads events from the event queue, has the main gameloops,
- * calls the update function and renders all the objects.
- */
 int main() {
 
+	Resource::Manager m("res/config.xml");
 	if (init() == false) {
 		return 1;
 	}
@@ -162,12 +143,10 @@ int main() {
 
 		//Sleep the time remaining for a constant framerate to be maintained
 		sfmlWindow.Display();
-//		if ((1000 / FPS) > dif){
-////			SDL_Delay((1000 / FPS) - dif);
-//			deltaTime = (1000 / FPS);
-//		}
-//		else
-//			deltaTime = dif;
+		float target_fps = 30.0f;
+		float sleeptime = 1.0f/target_fps - deltatime;
+		float actual_fps = 1.0f/deltatime;
+		sf::Sleep(sleeptime);
 	}
 	//Free memory and quit SDL
 	clean_up();
