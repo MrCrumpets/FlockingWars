@@ -1,8 +1,12 @@
 /*
  * Entity.h
  *
- *  Created on: May 21, 2010
- *      Author: Nathan
+ * Abstract base class for all in-game objects. A lot of the member variables
+ * in this class are now either completely unnecessary or somewhat redundant
+ * so I need to come back and clean this up.
+ *
+ * I'm hoping eventually to have most entities be described in XML files unless
+ * it requires something more fancy.
  */
 
 #ifndef ENTITY_H_
@@ -30,11 +34,14 @@ public:
 	}
 
 	Entity(Vec3f _pos){pos = _pos;}
-	~Entity(){}
+	virtual ~Entity(){}
 
 	virtual void die(){dead = true;}
 	virtual void interact(Entity* e){}
 	virtual void update(float dt){}
+
+	// Default renderer for debugging purposes. Draws a white square
+	// at the position of the entity.
 	virtual void render(Renderer*){
 		int rsize = 2;
 		glColor4ub(255, 255, 255, 255);

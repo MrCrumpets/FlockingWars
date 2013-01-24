@@ -23,7 +23,6 @@ void Menu::init(){
 
 void Menu::newGame(){
 	startGame = true;
-	cout << "NEW GAME BIZTSCHAS" << endl;
 }
 
 GameState* Menu::update(float dt){

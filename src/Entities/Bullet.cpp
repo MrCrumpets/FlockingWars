@@ -2,11 +2,9 @@
  * Bullet.cpp
  *
  *	Bullet object class. Manages the updating and rendering of
- *	the bullets, and contains methods for determing their intersection
- *	with spheres.
+ *	the bullets, and contains methods for determining their intersection
+ *	with other entities (as sphere-sphere collisions).
  *
- *  Created on: May 28, 2010
- *     Author: Nathan
  */
 
 #include "Bullet.h"

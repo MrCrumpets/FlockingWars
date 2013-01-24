@@ -1,8 +1,9 @@
 /*
- * Vec3f.h
+ * Mat4.h
  *
- *  Created on: Jan 31, 2011
- *      Author: Nathan
+ * Representation of a 4x4 matrix. Computes matrix multiplication, addition,
+ * translation, scaling, and rotation matrices for OpenGL.
+ *
  */
 
 #ifndef MAT4_H_
@@ -41,8 +42,7 @@ public:
 		}
 	}
 
-	float m[16];
-
+	// Returns a 4x4 translation matrix for OpenGL
 	static Mat4 translation(double x, double y, double z){
 		Mat4 translate(1.0f);
 		translate.m[3*4 + 0] = x;
@@ -51,6 +51,7 @@ public:
 		return translate;
 	}
 
+	// Returns a 4x4 scaling matrix for OpenGL
 	static Mat4 scale(double x, double y, double z){
 		Mat4 scale(1.0f);
 		scale.m[0*4 + 0] = x;
@@ -59,7 +60,7 @@ public:
 		return scale;
 	}
 
-
+	// Currently only performs rotations around the Z-axis...
 	static Mat4 rotation(double angle, double x, double y, double z){
 		Mat4 rotate(1.0f);
 		float cz = cos(angle);
@@ -73,6 +74,7 @@ public:
 
 	/**
 	 * MESA's implementation of gluInvertMatrix. Found on StackOverflow.
+	 *
 	 */
 	static bool invert(const float m[16], float invOut[16]){
 		float inv[16], det;
@@ -202,6 +204,9 @@ public:
 
 		return true;
 	}
+
+	// The actual matrix data
+	float m[16];
 };
 
 #endif /* VEC3F_H_ */

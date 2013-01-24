@@ -1,8 +1,11 @@
 /*
  * GameLevel.cpp
  *
- *  Created on: 2012-11-17
- *      Author: Nathan
+ * GameState for the actual game world. It stores, updates, and renders
+ * all the entities in the level.
+ *
+ * I am planning on making it load a level configuration from a text
+ * file in order to have pre-designed and varied levels.
  */
 
 #include "GameLevel.h"
@@ -44,21 +47,14 @@ void GameLevel::init(){
 	flocks.push_back(f);
 
 	renderer = new Renderer(width, height);
-	renderer->loadShader("");
-	renderer->useShader(0);
 	time = renderer->setUniform("utime");
 	offsetUniform = renderer->setUniform("uoffset");
 	glUniform2f(offsetUniform, 0.5f, 0.25f);
-
-
-	renderer->uniforms.projMat = renderer->setUniform("uprojection");
-	Mat4 projection = renderer->setProjection(width, height);
-	glUniformMatrix4fv(renderer->uniforms.projMat, 1, GL_FALSE, (GLfloat*)projection.m);
-
-	renderer->uniforms.modelMat = renderer->setUniform("umodelview");
 	renderer->setCamera(0.5f, -0.25f, 150.0f);
-	renderer->uniforms.color = renderer->setUniform("ucolor");
 	renderer->setColor(1.0f, 1.0f, 1.0f, 0.5f);
+
+	// Load Font
+	renderer->loadFont("res/Inconsolata.ttf");
 }
 
 GameState* GameLevel::update(float dt){
@@ -118,6 +114,7 @@ void GameLevel::render(){
 	renderer->pushMatrix();
 	renderer->setCamera(-player->pos.x, -player->pos.y, 150);
 	renderCursor(renderer);
+	renderer->renderString(Vec3f(0,0,0), "Player 1");
 	vector<Entity*>::iterator it;
 	for(it = entities.begin(); it != entities.end(); it++){
 		(*it)->render(renderer);

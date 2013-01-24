@@ -6,7 +6,6 @@
  */
 
 #include "UserInterface.h"
-#include "../Util/text.h"
 
 UserInterface::UserInterface() {
 }
@@ -59,16 +58,16 @@ UserInterface::~UserInterface() {}
 TextBox::TextBox( Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, std::string _text, float _scale):Widget(_pos, _size, _colour, _a){
 	text = _text;
 	scale = _scale;
-	size.x = stringWidth(text, scale);
+//	size.x = stringWidth(text, scale);
 	pos.x -= size.x/2;
 }
 
 void TextBox::draw(){
 	glColor4f(colour.x, colour.y, colour.z, alpha);
-	if(text != "")
-		renderString(text, pos.x, pos.y, 0, scale);
-	else
-		renderNum(*number, pos.x, pos.y, 0, scale);
+//	if(text != "")
+//		renderString(text, pos.x, pos.y, 0, scale);
+//	else
+//		renderNum(*number, pos.x, pos.y, 0, scale);
 }
 
 Button::Button(Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, char* _text, float _scale):Widget(_pos, _size, _colour, _a){

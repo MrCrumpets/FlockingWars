@@ -1,8 +1,8 @@
 /*
  * Explosion.h
  *
- *  Created on: May 29, 2010
- *      Author: Nathan
+ * Rudimentary particle system for rendering 2-D stylized explosions.
+ *
  */
 
 #ifndef EXPLOSION_H_

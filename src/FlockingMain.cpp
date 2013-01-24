@@ -1,4 +1,10 @@
-#define GLEW_STATIC
+/*
+ * FlockingMain.cpp
+ *
+ * Entry point for the game. Initializes SFML, OpenGL. Handles input,
+ * updates and renders the current game state in main game loop.
+ *
+ */
 
 #include "main.h"
 #include <SFML/Window.hpp>
@@ -52,6 +58,7 @@ void inputCallback (MappedInput& inputs);
 
 using namespace std;
 
+// Initializes OpenGl, Shader Extensions.
 bool init() {
 	//Initialize OpenGL
 	if (init_GL(SCREEN_WIDTH, SCREEN_HEIGHT) == false) {
@@ -69,6 +76,8 @@ bool init() {
 	return true;
 }
 
+// Currently I only have the one main input callback which sends the
+// input to the current GameState.
 void inputCallback (MappedInput& inputs){
 	if(inputs.actions.find("quit") != inputs.actions.end()){
 		quit = true;
@@ -78,6 +87,7 @@ void inputCallback (MappedInput& inputs){
 	}
 }
 
+// Gets events from SFML and passes them off to the InputManager
 void pollEvents(){
 	sf::Event event;
 	while (sfmlWindow.pollEvent(event)) {
@@ -106,9 +116,9 @@ void pollEvents(){
 	}
 }
 
-int main() {
 
-	Resource::Manager m("res/config.xml");
+// Entry point.
+int main() {
 	if (init() == false) {
 		return 1;
 	}
@@ -120,11 +130,11 @@ int main() {
 	sf::Time deltatime;
 	cout << "Entering main loop" << endl;
 	while (quit == false) {
+		clock.restart();
+		GameState* newState = currentState->update(deltatime.asSeconds());
 		pollEvents();
 		inputManager.dispatchInput();
 		inputManager.clear();
-		clock.restart();
-		GameState* newState = currentState->update(deltatime.asSeconds());
 		if(newState != currentState){
 			delete currentState;
 			currentState = newState;
@@ -135,10 +145,9 @@ int main() {
 
 		//Sleep the time remaining for a constant framerate to be maintained
 		sfmlWindow.display();
-//		cout << deltatime.asMicroseconds() << " " << deltatime.asMilliseconds() << " " << deltatime.asSeconds() << endl;
 		float target_fps = 30.0f;
-		sf::Time sleeptime = sf::seconds(1.0f/target_fps) - deltatime;
-		sf::sleep(sleeptime);
+		deltatime = sf::seconds(1.0f/target_fps) - deltatime;
+		sf::sleep(deltatime);
 	}
 	cout << "All done here." << endl;
 	return 0;

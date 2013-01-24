@@ -1,8 +1,9 @@
 /*
  * includes.h
  *
- *  Created on: May 31, 2010
- *      Author: Nathan
+ * Originally written because a lot of files had the same includes, and
+ * I eventually got lazy and started putting global variables here. I
+ * will need to get rid of this one as well.
  */
 
 #ifndef INCLUDES_H_

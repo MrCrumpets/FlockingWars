@@ -31,7 +31,7 @@ const float vertexData[] = {
 		-0.5f, -0.5f, 0.0f, 1.0f,
 };
 
-const float decay = 0.91;
+const float decay = 0.95;
 
 Player::Player(Vec3f _pos, float _size) {
 	type = SHIP;
@@ -64,16 +64,15 @@ Player::Player(Vec3f _pos, float _size) {
 void Player::render(Renderer* r){
 	r->pushMatrix();
 	r->setColor(1.0f, 0.0f, 0.0f, 1.0f);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	r->rotate(dir.theta(), 0.0f, 0.0f, 1.0f);
 	r->applyCamera();
 	r->translate(pos.x, pos.y, 0.0f);
 	r->uploadModelView();
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertexData)/4);
 	glDisableVertexAttribArray(0);
-//	glDisableVertexAttribArray(1);
 	r->popMatrix();
 	r->setColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
@@ -97,8 +96,8 @@ void Player::update(float dt){
 	pos += vel * dt;
 	dir += Vec3f(-dir.y, dir.x, 0.0f)*rotspeed*dt;
 	dir.normalize();
-	rotspeed *= 0.89;
-	acc*=0.5;
+	rotspeed *= 0.95;
+	acc*=0.9;
 	if(vel.length() > maxVel){
 		vel = vel.normalized()*maxVel;
 	}
@@ -141,7 +140,7 @@ void Player::shoot(){
  * Accelerates the ship in the it is facing
  */
 void Player::accelerate(float speed){
-	acc += dir.normalized() * 100;
+	acc += dir.normalized() * 40;
 }
 
 /**

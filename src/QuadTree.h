@@ -1,8 +1,9 @@
 /*
  * QuadTree.h
  *
- *  Created on: Mar 15, 2011
- *      Author: Nathan
+ * Outline for a first attempt at more efficient entity-entity interactions.
+ * I started this awhile ago, I'm not sure if I'm to use a QuadTree anymore,
+ * but I'm keeping this here for now.
  */
 
 #ifndef QUADTREE_H_

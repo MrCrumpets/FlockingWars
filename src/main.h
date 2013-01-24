@@ -1,8 +1,8 @@
 /*
  * main.h
  *
- *  Created on: May 23, 2010
- *      Author: Nathan
+ * Another remnant of the original. I will be getting rid of this ASAP,
+ * as it doesn't serve any purpose and is AFAIK very bad practice..
  */
 
 #ifndef MAIN_H_

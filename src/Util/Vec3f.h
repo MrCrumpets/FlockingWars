@@ -1,8 +1,7 @@
 /*
  * Vec3f.h
  *
- *  Created on: Jan 31, 2011
- *      Author: Nathan
+ * Performs all the important vector operations.
  */
 
 #ifndef VEC3F_H_

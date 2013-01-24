@@ -1,10 +1,16 @@
+/*
+ * Init.h
+ *
+ * My attempt to remove some of the kind of boilerplate initialisation
+ * code from FlockingMain.cpp. There isn't all that much here right now,
+ * but it does make the other file a lot cleaner.
+ */
 #ifndef INIT_H_
 #define INIT_H_
 
 #include "GL/glew.h"
 #include <string>
 #include <iostream>
-#include "text.h"
 
 using std::cout;
 using std::endl;

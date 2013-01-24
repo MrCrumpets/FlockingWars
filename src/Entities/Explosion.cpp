@@ -1,12 +1,6 @@
 /*
  * Explosion.cpp
  *
- *	The Explosion class is an object class, used to contain and update all the variables relating to
- *	the explsion objects and particles contained the explosion.
- *
- *
- *  Created on: May 29, 2010
- *      Author: Nathan
  */
 
 #include "Explosion.h"

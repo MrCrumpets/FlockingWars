@@ -1,8 +1,11 @@
 /*
  * Flock.h
  *
- *  Created on: Jan 23, 2011
- *      Author: Nathan
+ * This was originally (way back when) a class used to simulate a flocking
+ * algorithm. My current plan is to use it as a "squad" class.
+ *
+ * It will handle orders/commands and formations for a number of entities.
+ *
  */
 class Spawner;
 #ifndef FLOCK_H_
@@ -15,7 +18,9 @@ class Spawner;
 using std::vector;
 
 
-
+// These are tiny little ships that fly around and don't do much else. I
+// am not sure how much longer they'll be around before I replace them
+// with something more abstract.
 class Boid : public Entity {
 public:
 	Boid();

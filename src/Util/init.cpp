@@ -1,7 +1,5 @@
 #include "init.h"
-
-
-#include "text.h"
+#include "SFML/Graphics.hpp"
 
 //GLuint loadTexture(std::string filename) {
 //	//Temporary storage for the image that's loaded
@@ -34,6 +32,7 @@
  * @return
  * 		bool flag stating whether the init_GL succeeded with errors or not.
  */
+
 bool init_GL(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
 	//Set clear color
 	glClearColor(0, 0, 0, 0);
@@ -66,58 +65,3 @@ int nextPowerOfTwo(int n){
 	n++;
 	return n;
 }
-
-//void generateGlyphs(TTF_Font* mainFont, int numChars, Glyph* glyphs){
-//	unsigned int Rmask, Gmask, Bmask, Amask;
-//		#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-//			Rmask = 0xff000000;
-//			Gmask = 0x00ff0000;
-//			Bmask = 0x0000ff00;
-//			Amask = 0x000000ff;
-//		#else
-//			Rmask = 0x000000ff;
-//			Gmask = 0x0000ff00;
-//			Bmask = 0x00ff0000;
-//			Amask = 0xff000000;
-//		#endif
-//
-//	//Generate Number Glyphs
-//	cout << "Init: text " << mainFont << endl;
-//	for(int i = 0; i < numChars; i++){
-//		SDL_Color color = {255, 255, 255};
-//		SDL_Surface *temp = TTF_RenderGlyph_Blended(mainFont, i+32, color);
-//		SDL_SetAlpha(temp, 0, 0);
-//		SDL_Surface *text =  SDL_CreateRGBSurface(0, nextPowerOfTwo(temp->w), nextPowerOfTwo(temp->h), 32, Rmask, Gmask, Bmask, Amask);
-//		SDL_BlitSurface(temp, 0, text, 0);
-//		GLuint gTex;
-//		GLuint dl;
-//		glEnable(GL_TEXTURE_2D);
-//		glGenTextures(1, &gTex);
-//		glBindTexture(GL_TEXTURE_2D, gTex);
-//
-//		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//		glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-//		glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, text->w, text->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, text->pixels );
-//		dl = glGenLists(1);
-//		float x = 0, y = 0, z = 0, dy = text->h-temp->h;
-//		if((char)(i+32)=='q' || (char)(i+32)=='p'|| (char)(i+32)=='g' || (char)(i+32)=='j')
-//			dy += 12;
-//		float w = text->w, h = text->h;
-//		glNewList(dl, GL_COMPILE);
-//		glBindTexture(GL_TEXTURE_2D, gTex );
-//		glBegin(GL_QUADS);
-//		glColor4ub(255, 255, 255, 255);
-//		glTexCoord2d(0, 1); glVertex3d(x, y-dy, z);
-//		glTexCoord2d(1, 1); glVertex3d(x+w, y-dy, z);
-//		glTexCoord2d(1, 0); glVertex3d(x+w, y+h-dy, z);
-//		glTexCoord2d(0, 0); glVertex3d(x, y+h-dy, z);
-//		glEnd();
-//		glEndList();
-//		float s = (34-temp->w)/2;
-//		Glyph l = {temp->w, h, s, s, 40, dl};
-//		glyphs[i] = l;
-//		SDL_FreeSurface(temp);
-//		SDL_FreeSurface(text);
-//	}
-//}

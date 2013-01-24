@@ -6,7 +6,6 @@
  */
 
 #include "QuadTree.h"
-#include "Util/text.h"
 
 unsigned int MAX_DEPTH = 15;
 unsigned int MAX_POP = 5;
@@ -37,7 +36,7 @@ vector<Entity*> QuadTree::findEntities(Vec2f pos, float r){
 
 void QuadTree::render(){
 	glColor4ub(255, 255, 255, 50);
-	renderNum(_entities.size(), _mid.x, _mid.y, 0, 0.5);
+//	renderNum(_entities.size(), _mid.x, _mid.y, 0, 0.5);
 	glBegin(GL_LINES);
 	glVertex2f(_min.x, _min.y);
 	glVertex2f(_min.x, _max.y);

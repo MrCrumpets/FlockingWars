@@ -1,8 +1,8 @@
 /*
  * Spawner.h
  *
- *  Created on: Jan 28, 2011
- *      Author: Nathan
+ * This entity acts somewhat like the homebase. Again, this is leftover
+ * from the old version. I'm not sure what it's purpose will be.
  */
 class Flock;
 
