@@ -9,6 +9,7 @@
 #define RENDERER_H_
 
 #include "GL/glew.h"
+#include "Font.h"
 #include "../../Util/Vec3f.h"
 #include "../../Util/Mat4.h"
 #include <map>
@@ -28,6 +29,10 @@ public:
 	void setColor(Vec3f c);
 	void setColor(float r, float g, float b, float a);
 	Vec3f getCursorPos(int x, int y);
+	void loadFont(const std::string &name);
+	void renderString(Vec3f pos, const std::string &text);
+	void bindTexture(int texture);
+	void drawVertexArray(GLuint vbo, const float* vertexData);
 
 	// Matrix functions
 	Mat4 setProjection(int width, int height);
@@ -44,11 +49,12 @@ public:
 
 	virtual ~Renderer();
 	struct {
-		GLuint projMat, modelMat, color;
+		GLuint projMat, modelMat, color, texture;
 	} uniforms;
 private:
 	std::vector<Mat4> matrixStack;
 	Mat4 camera;
+	Font* font;
 	int width, height;
 
 };

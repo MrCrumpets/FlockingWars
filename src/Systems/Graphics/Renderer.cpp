@@ -10,12 +10,21 @@
 
 Shader* shader;
 Mat4 projection;
-Mat4 invProjection;
 
 Renderer::Renderer(int width, int height) {
 	this->height = height;
 	this->width = width;
+	std::cout << matrixStack.size() << std::endl;
 	matrixStack.push_back(Mat4(1.0f));
+	std::cout << matrixStack.size() << std::endl;
+	loadShader("");
+	useShader(0);
+	uniforms.projMat = setUniform("uprojection");
+	Mat4 projection = setProjection(width, height);
+	uniforms.modelMat = setUniform("umodelview");
+	uniforms.color = setUniform("ucolor");
+
+
 }
 
 void Renderer::loadShader(const char* filname){
@@ -58,9 +67,51 @@ Vec3f Renderer::getCursorPos(int x, int y){
 	return p0 + (p1 - p0)*u;
 }
 
+void Renderer::loadFont(const std::string &name){
+	font = new Font(name);
+}
+
+void Renderer::bindTexture(int texture){
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(uniforms.texture, 0);
+}
+
+void Renderer::drawVertexArray(GLuint vbo,const float* vertexData){
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertexData)/4);
+	glDisableVertexAttribArray(0);
+}
+
+void Renderer::renderString(Vec3f pos, const std::string &text){
+	pushMatrix();
+	for(unsigned i = 0; i < text.size(); ++i){
+		Glyph g = font->getGlyph(text[i]);
+	    float x = pos.x + g.left;
+	    float y = pos.y + g.top;
+	    float w = g.w;
+	    float h = g.h;
+	    glEnable(GL_TEXTURE);
+	    bindTexture(g.texture);
+	    glBegin(GL_QUADS);
+	    glVertex3f(x - w, y - h, 0);
+	    glVertex3f(x + w, y - h, 0);
+	    glVertex3f(x - w, y + h, 0);
+	    glVertex3f(x + w, y + h, 0);
+	    glEnd();
+//	    glBufferData(GL_ARRAY_BUFFER, sizeof (box), box, GL_DYNAMIC_DRAW);
+//	    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	    pos.x += (g.adv);
+	}
+	popMatrix();
+}
+
 #define PROJECTION_FOV_RATIO 0.7f
 #define PROJECTION_NEAR_PLANE 0.0625f
-#define PROJECTION_FAR_PLANE 1024.0f
+#define PROJECTION_FAR_PLANE 256.0f
 
 Mat4 Renderer::setProjection(int width, int height){
 	Mat4 result;
@@ -78,6 +129,7 @@ Mat4 Renderer::setProjection(int width, int height){
 	result.m[2*4 + 0] = 0.0f; result.m[2*4 + 1] = 0.0f; result.m[2*4 + 2] = r_z;  result.m[2*4 + 3] = 1.0f;
 	result.m[3*4 + 0] = 0.0f; result.m[3*4 + 1] = 0.0f; result.m[3*4 + 2] = r_w;  result.m[3*4 + 3] = 0.0f;
 	projection = result;
+	glUniformMatrix4fv(uniforms.projMat, 1, GL_FALSE, (GLfloat*)projection.m);
 	return result;
 }
 
@@ -98,7 +150,8 @@ void Renderer::pushMatrix(){
 }
 
 void Renderer::popMatrix(){
-	matrixStack.pop_back();
+	if(matrixStack.size() > 1)
+		matrixStack.pop_back();
 }
 
 Mat4 Renderer::translate(float x, float y, float z){
