@@ -3,3 +3,8 @@ and then an entry to a competition and then got abandoned with minimal tinkerage
 and a half. I've done a not insignificant amount of work on it recently so I decided to post it here.
 
 It depends on Boost::signals, and SFML 1.6. You'll need those to compile.
+
+The old version (Windows) can be downloaded here:
+http://dl.dropbox.com/u/3741604/FlockingWars/FlockingWars_1.2.5/FlockingWars_Win_1.2.5.zip
+
+I'll upload binaries for the new one here when it is playable again.
