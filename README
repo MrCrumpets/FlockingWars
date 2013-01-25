@@ -1,8 +1,9 @@
 This is a project I started a couple years ago for fun which turned into a class project
-and then an entry to a competition and then got abandoned with minimal tinkerage over the past year
-and a half. I've done a not insignificant amount of work on it recently so I decided to post it here.
+and then an entry to a competition and then got abandoned with minimal tinkerage over the
+past year and a half. I've done a not insignificant amount of work on it recently so I 
+decided to post it here.
 
-It depends on Boost::signals, and SFML 1.6. You'll need those to compile.
+It depends on Boost::signals, freetype2 and SFML 1.6. You'll need those to compile.
 
 The old version (Windows) can be downloaded here:
 http://dl.dropbox.com/u/3741604/FlockingWars/FlockingWars_1.2.5/FlockingWars_Win_1.2.5.zip
