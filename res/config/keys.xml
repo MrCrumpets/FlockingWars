@@ -1,0 +1,11 @@
+<context name="gameplay">
+    <states>
+        <<state key="space" name="shoot" />
+        <<state key="w" name="thrust" />
+        <<state key="a" name="rotate_left" />
+        <<state key="d" name="rotate_right" />
+    </states>
+    <actions>
+        <<action key="escape" name="quit" />
+    </actions>
+</context>

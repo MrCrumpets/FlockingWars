@@ -28,7 +28,6 @@ std::map<std::string, sf::Keyboard::Key>& keyStrings()
 InputManager::InputManager() {
 	std::cout << "Parsing key mapping" << std::endl;
 	registerButtonStrings();
-//	std::cout << "pop: " << keyStrings["poop"] << std::endl;
 	std::ifstream infile("res/config/keys.xml");
 	std::vector<char> buffer((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>());
 	buffer.push_back('\0');
@@ -153,7 +152,6 @@ InputContext::InputContext(xml_node<> *context){
 	for(xml_node<> *node = keymap->first_node();
 			node; node = node->next_sibling())
 	{
-		std::cout << node->first_attribute()->value() << std::endl;
 		int key = getKey(node->first_attribute()->value());
 		State state (node->first_attribute()->next_attribute()->value());
 		stateMap[key] = state;
