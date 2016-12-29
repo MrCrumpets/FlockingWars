@@ -9,9 +9,7 @@
 #define USERINTERFACE_H_
 
 #include "../util/includes.h"
-#include "boost/signal.hpp"
-#include "boost/bind.hpp"
-#include "boost/function.hpp"
+#include <functional>
 #include <string>
 using std::vector;
 
@@ -80,9 +78,9 @@ struct Button:Widget{
 
 	template <class T>
 	void hook(void(T::*_callback)(void), T* _object){
-		cb = boost::bind(_callback, _object);
+		cb = std::bind(_callback, _object);
 	}
-	boost::function<void ()> cb;
+	std::function<void ()> cb;
 	bool hover;
 	int hoverTime;
 	float scale;

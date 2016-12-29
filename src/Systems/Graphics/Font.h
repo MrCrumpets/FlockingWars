@@ -29,7 +29,7 @@ public:
 	virtual ~Font();
 
 	// Returns next largest power of two.
-	inline int npw2(int a){
+	inline int npw2(int a) const {
 		int result = 1;
 		while(result < a)
 			result <<= 1;

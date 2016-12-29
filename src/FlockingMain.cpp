@@ -10,7 +10,6 @@
 #include <SFML/Window.hpp>
 #include "Systems/InputManager.h"
 #include "Systems/Graphics/Shaders/shaders.h"
-#include "Systems/ResourceManager/Manager.h"
 #include "GameStates/GameState.h"
 #include "GameStates/GameLevel.h"
 #include "GameStates/Menu.h"
