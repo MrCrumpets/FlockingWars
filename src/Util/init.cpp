@@ -36,19 +36,12 @@
 bool init_GL(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
 	//Set clear color
 	glClearColor(0, 0, 0, 0);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glEnable(GL_BLEND);
-	glColorMaterial (GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	float aspectRatio = (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT;
-	gluPerspective(45.0, aspectRatio, 0.001, 5000.0);
-	//Initialize modelview matrix
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	//If there was any errors
-	if (glGetError() != GL_NO_ERROR) {
-		return false;
+        GLenum err;
+	if ((err = glGetError()) != GL_NO_ERROR) {
+            std::cerr << "OpenGL error: " << err << std::endl;
+            return false;
 	}
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	//If everything initialized

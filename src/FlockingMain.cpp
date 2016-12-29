@@ -18,7 +18,8 @@
 #include "Util/init.h"
 #include "Util/Mat4.h"
 
-sf::Window sfmlWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars");
+sf::Window sfmlWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars", 
+        sf::Style::Default, sf::ContextSettings(32, 0, 0, 3, 3));
 
 bool fullscreen = false;
 
@@ -61,7 +62,8 @@ using namespace std;
 bool init() {
 	//Initialize OpenGL
 	if (init_GL(SCREEN_WIDTH, SCREEN_HEIGHT) == false) {
-		return false;
+            std::cerr << "init_GL failed" << std::endl;
+            return false;
 	}
 
 	srand(time(NULL));//Initialize random generator
@@ -119,7 +121,8 @@ void pollEvents(){
 // Entry point.
 int main() {
 	if (init() == false) {
-		return 1;
+            std::cerr << "Init failed, exiting" << std::endl;
+            return 1;
 	}
 	cout << "Init: complete" << endl;
 
