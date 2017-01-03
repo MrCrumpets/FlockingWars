@@ -79,9 +79,7 @@ Particle::Particle(float _x, float _y, float angle){
 	const int maxVel = 15;
 	vel = Vec3f(cos(angle)*(rand()%maxVel), sin(angle)*(rand()%maxVel), 0.0f);
 	int random = rand()%5;
-	r = colors[random][0];
-	g = colors[random][1];
-	b = colors[random][2];
+	color = Vec3f(colors[random][0], colors[random][1], colors[random][2]);
 }
 
 /**
@@ -100,7 +98,7 @@ void Particle::update(float dt){
 
 void Particle::render(bool threed){
 	float z = threed?0:0;
-	glColor4f((r)/250.0, (g)/250.0, (b)/250.0, life/30.0);//Set the color with adjusted alpha so it fades out
+	//glColor4f((r)/250.0, (g)/250.0, (b)/250.0, life/30.0);//Set the color with adjusted alpha so it fades out
 	glVertex3f(pos.x, pos.y, z);
 	glVertex3f(pos.x+(vel.x), pos.y+(vel.y), z);
 }

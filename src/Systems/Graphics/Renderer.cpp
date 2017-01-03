@@ -20,23 +20,14 @@ Renderer::Renderer(int width, int height) {
 	loadShader("");
 	useShader(0);
 	uniforms.projMat = setUniform("uprojection");
-	Mat4 projection = setProjection(width, height);
 	uniforms.modelMat = setUniform("umodelview");
 	uniforms.color = setUniform("ucolor");
 
-
+	Mat4 projection = setProjection(width, height);
 }
 
 void Renderer::loadShader(const char* filname){
 	shader = new Shader("res/shaders/vert.glsl", "res/shaders/frag.glsl", width, height);
-}
-
-GLuint Renderer::makeBuffer(GLenum target, const void *buffer_data, GLsizei buffer_size){
-    GLuint buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(target, buffer);
-    glBufferData(target, buffer_size, buffer_data, GL_STATIC_DRAW);
-    return buffer;
 }
 
 Vec3f Renderer::unProject(int x, int y, double z){
@@ -68,7 +59,7 @@ Vec3f Renderer::getCursorPos(int x, int y){
 }
 
 void Renderer::loadFont(const std::string &name){
-	font = new Font(name);
+    _font.reset(new Font(name));
 }
 
 void Renderer::bindTexture(int texture){
@@ -77,18 +68,29 @@ void Renderer::bindTexture(int texture){
     glUniform1i(uniforms.texture, 0);
 }
 
-void Renderer::drawVertexArray(GLuint vbo,const float* vertexData){
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertexData)/4);
-	glDisableVertexAttribArray(0);
+GLuint Renderer::makeBuffer(GLenum target, const void *buffer_data, GLsizei buffer_size){
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+    glBindBuffer(target, vbo);
+    glBufferData(target, buffer_size, buffer_data, GL_STATIC_DRAW);
+    return vbo;
+}
+
+void Renderer::drawVertexArray(const std::vector<float> &vertices){
+    GLuint vbo = makeBuffer(GL_ARRAY_BUFFER, &vertices[0], vertices.size());
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glEnableVertexAttribArray(0);
+    /*
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size()/4);
+    glDisableVertexAttribArray(0);
+    */
 }
 
 void Renderer::renderString(Vec3f pos, const std::string &text){
 	pushMatrix();
 	for(unsigned i = 0; i < text.size(); ++i){
-		Glyph g = font->getGlyph(text[i]);
+		Glyph g = _font->getGlyph(text[i]);
 	    float x = pos.x + g.left;
 	    float y = pos.y + g.top;
 	    float w = g.w;

@@ -37,7 +37,6 @@ bool init_GL(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
 	//Set clear color
 	glClearColor(0, 0, 0, 0);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	//If there was any errors
         GLenum err;
 	if ((err = glGetError()) != GL_NO_ERROR) {
             std::cerr << "OpenGL error: " << err << std::endl;

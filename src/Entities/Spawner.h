@@ -21,7 +21,7 @@ class Line : public Entity{
 public:
 	Line(){}
 	Line(Vec3f, Vec3f);
-	void render(bool);
+	void render();
 	void update(float dt);
 	void spawnBoids(){};
 	Vec3f center;
@@ -30,9 +30,8 @@ public:
 
 class Spawner : public Entity {
 public:
-	Spawner(Vec3f, int);
-	void render(bool);
-	void render(Renderer* r);
+	Spawner(Renderer *r, Vec3f, int);
+	void render();
 	void update(float dt);
 	virtual ~Spawner();
 	std::vector<Line> lines;

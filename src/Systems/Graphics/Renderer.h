@@ -14,9 +14,10 @@
 #include "../../Util/Mat4.h"
 #include <map>
 #include <vector>
+#include <memory>
 
 class Renderer {
-public:
+    public:
 	Renderer(int width, int height);
 	void loadShader(const char* filename);
 	void useShader(int id);
@@ -32,7 +33,7 @@ public:
 	void loadFont(const std::string &name);
 	void renderString(Vec3f pos, const std::string &text);
 	void bindTexture(int texture);
-	void drawVertexArray(GLuint vbo, const float* vertexData);
+	void drawVertexArray(const std::vector<float> &vertices);
 
 	// Matrix functions
 	Mat4 setProjection(int width, int height);
@@ -51,12 +52,12 @@ public:
 	struct {
 		GLuint projMat, modelMat, color, texture;
 	} uniforms;
-private:
+
+    private:
 	std::vector<Mat4> matrixStack;
 	Mat4 camera;
-	Font* font;
+        std::unique_ptr<Font> _font;
 	int width, height;
-
 };
 
 #endif /* RENDERER_H_ */

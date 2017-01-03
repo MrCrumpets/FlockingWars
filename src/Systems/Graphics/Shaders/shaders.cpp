@@ -102,6 +102,10 @@ GLuint Shader::setUniform(const char* name){
 	return glGetUniformLocation(g_resources.program, name);
 }
 
+GLuint Shader::setAttribute(const std::string &name){
+    return glGetAttribLocation(g_resources.program, name.c_str());
+}
+
 int Shader::disable(){
 	glUseProgram(0);
 	return 0;

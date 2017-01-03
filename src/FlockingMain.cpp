@@ -143,6 +143,12 @@ int main() {
 			currentState->init();
 		}
 		currentState->render();
+                // Check for OpenGL errors
+                GLenum err;
+                while ((err = glGetError()) != GL_NO_ERROR) {
+                    std::cerr << "Post-render OpenGL error: " << err << ": " << gluErrorString(err) << std::endl;
+                }
+
 		deltatime = clock.getElapsedTime();
 
 		//Sleep the time remaining for a constant framerate to be maintained

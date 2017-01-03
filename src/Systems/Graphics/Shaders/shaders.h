@@ -2,7 +2,6 @@
 #define SHADERS_H_
 
 #include "GL/glew.h"
-#define NO_SDL_GLEXT
 #include <iostream>
 
 class Shader {
@@ -13,6 +12,7 @@ public:
 	GLuint makeTexture(const char *filename);
 	GLuint makeBuffer(GLenum, const void *buffer_data, GLsizei buffer_size);
 	GLuint setUniform(const char* name);
+	GLuint setAttribute(const std::string &name);
 	int enable();
 	int disable();
 	int buildShaders(const char * vertFileName, const char *fragFileName);

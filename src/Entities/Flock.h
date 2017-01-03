@@ -24,14 +24,13 @@ using std::vector;
 class Boid : public Entity {
 public:
 	Boid();
-	Boid(Vec3f pos, int team);
+	Boid(Renderer *r, Vec3f pos, int team);
 	void update(float dt);
 	void interact(Entity* e);
-	void render(Renderer*);
+	void render();
 	void die();
 	virtual ~Boid();
 	float minSpeed, maxSpeed, minSq, maxSq;
-	GLuint meshDisplayList;
 	int rank;
 	float fear;
 };

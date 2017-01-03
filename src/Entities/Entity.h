@@ -17,11 +17,13 @@
 #include <list>
 
 class Entity {
-public:
+    protected:
+        Renderer *renderer;
+    public:
 	Vec3f pos, oldpos, vel, acc, dir, angvel;
+        Vec3f color;
 	float damage, health, maxHealth;
-	unsigned char r, g, b;
-	bool dead, explodes;
+	bool dead, explodes, selected;
 	unsigned char type;
 	unsigned char team;
 	float value;
@@ -33,7 +35,7 @@ public:
 		dead = false;
 	}
 
-	Entity(Vec3f _pos){pos = _pos;}
+	Entity(Renderer *r, Vec3f _pos) : renderer(r), pos(_pos) {}
 	virtual ~Entity(){}
 
 	virtual void die(){dead = true;}
@@ -42,7 +44,7 @@ public:
 
 	// Default renderer for debugging purposes. Draws a white square
 	// at the position of the entity.
-	virtual void render(Renderer*){
+	virtual void render(){
 		int rsize = 2;
 		glColor4ub(255, 255, 255, 255);
 		glBegin(GL_QUADS);
