@@ -2,6 +2,8 @@ oldfiles/
 shader/
 includes/
 
+*.h.gch
+
 #################
 ## Eclipse
 #################
