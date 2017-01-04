@@ -24,7 +24,7 @@ using std::vector;
 class Boid : public Entity {
 public:
 	Boid();
-	Boid(Renderer *r, Vec3f pos, int team);
+	Boid(Renderer *r, glm::vec3 pos, int team);
 	void update(float dt);
 	void interact(Entity* e);
 	void render();
@@ -46,7 +46,7 @@ public:
 	void setTag(char t);
 	void addEntity(Entity* e);
 	void removeEntity(Entity* e);
-	void setObjective(Vec3f o);
+	void setObjective(glm::vec3 o);
 	bool update(float dt);
 	virtual ~Flock(){}
 	vector<Entity*> members;

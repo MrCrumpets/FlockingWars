@@ -15,8 +15,6 @@
 
 #include "GL/glew.h"
 #include "math.h"
-#include "Vec2f.h"
-#include "Vec3f.h"
 #include <string>
 #include <iostream>
 #include <algorithm>

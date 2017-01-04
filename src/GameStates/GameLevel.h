@@ -8,14 +8,15 @@
 #ifndef GAMELEVEL_H_
 #define GAMELEVEL_H_
 
+#include <vector>
+#include <glm/fwd.hpp>
+
 #include "GameState.h"
 #include "../Entities/Entity.h"
 #include "../Entities/Spawner.h"
 #include "../Entities/Player.h"
 #include "../Entities/Flock.h"
-#include "../Util/Vec3f.h"
 #include "../Systems/InputManager.h"
-#include <vector>
 
 using std::vector;
 
@@ -31,12 +32,12 @@ public:
 	virtual ~GameLevel();
 private:
 	void renderCursor(Renderer* r);
-	bool contains(Vec3f x, Vec3f a, Vec3f b);
+	bool contains(glm::vec3 x, glm::vec3 a, glm::vec3 b);
 	std::vector<Entity*> entities;
 	std::vector<Flock*> flocks;
 	Player* player;
 	Spawner* spawner;
-	Vec3f camera;
+	glm::vec3 camera;
 	GLuint time, offsetUniform;
 	int width, height;
 };

@@ -10,10 +10,10 @@
 unsigned int MAX_DEPTH = 15;
 unsigned int MAX_POP = 5;
 
-QuadTree::QuadTree(Vec2f min, Vec2f max, vector<Entity*> entities, unsigned int depth) {
+QuadTree::QuadTree(glm::vec2 min, glm::vec2 max, vector<Entity*> entities, unsigned int depth) {
 	_min = min;
 	_max = max;
-	_mid = (_max + _min)/2;
+	_mid = (_max + _min)/2.f;
 	_entities = entities;
 	_depth = depth;
 	_split = false;
@@ -27,7 +27,7 @@ QuadTree::QuadTree(Vec2f min, Vec2f max, vector<Entity*> entities, unsigned int 
 }
 
 
-vector<Entity*> QuadTree::findEntities(Vec2f pos, float r){
+vector<Entity*> QuadTree::findEntities(glm::vec2 pos, float r){
 	if(_split){
 		int index = (pos.x > _mid.x) | ((pos.y > _mid.y) << 1);
 		children[index]->findEntities(pos, r);
@@ -57,13 +57,13 @@ void QuadTree::render(){
 	}
 }
 
-void findEntities(Vec2f pos, float r){
+void findEntities(glm::vec2 pos, float r){
 
 }
 
 void QuadTree::split(){
 	int depth = _depth + 1;
-	Vec2f hypotenuse = _max - _min;
+	glm::vec2 hypotenuse = _max - _min;
 	double halfWidth = hypotenuse.x/2;
 	double halfHeight = hypotenuse.y/2;
 	vector<Entity*> childEntities[4];
@@ -77,8 +77,8 @@ void QuadTree::split(){
 	for(int i = 0; i < 4; i++){
 		int xq = !!(i&1);
 		int yq = !!(i&2);
-		Vec2f min = Vec2f(_min.x + (halfWidth*xq), _min.y + (halfHeight*yq));
-		Vec2f max = Vec2f(_max.x - (halfWidth*(!xq)), _max.y - (halfHeight*(!yq)));
+		glm::vec2 min = glm::vec2(_min.x + (halfWidth*xq), _min.y + (halfHeight*yq));
+		glm::vec2 max = glm::vec2(_max.x - (halfWidth*(!xq)), _max.y - (halfHeight*(!yq)));
 		children[i] = new QuadTree(min, max, childEntities[i], depth);
 	}
 	_split = true;

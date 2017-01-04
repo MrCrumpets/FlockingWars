@@ -15,17 +15,17 @@
 
 class Player : public Entity{
 public:
-	Player(Renderer *r, Vec3f, float);
+	Player(Renderer *r, glm::vec3, float);
 	void render();
 	void update(float);
 	void accelerate(float speed);
 	void rotate(float dir);
 	void shoot(void);
-	void respawn(Vec3f);
+	void respawn(glm::vec3);
 	void interact(Entity* e);
 	void removeBullet(unsigned int);
 	bool intersectSphere(float, float, float);
-	bool bulletsIntersectS(Vec3f, Vec3f, float);
+	bool bulletsIntersectS(glm::vec3, glm::vec3, float);
 	virtual ~Player();
 	float rotspeed;
 	float velSpeed;

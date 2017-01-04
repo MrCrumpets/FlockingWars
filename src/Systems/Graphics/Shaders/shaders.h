@@ -6,16 +6,16 @@
 
 class Shader {
 public:
-	Shader(const char *vertFilename, const char *fragFilename, int width, int height);
-	GLuint makeShader(GLenum type, const char *filename);
+	Shader(const std::string &vertFilename, const std::string &fragFilename, int width, int height);
+	GLuint makeShader(GLenum type, const std::string &filename);
 	GLuint makeProgram(GLuint vertex_shader, GLuint fragment_shader);
-	GLuint makeTexture(const char *filename);
+	GLuint makeTexture(const std::string &filename);
 	GLuint makeBuffer(GLenum, const void *buffer_data, GLsizei buffer_size);
-	GLuint setUniform(const char* name);
+	GLuint setUniform(const std::string &name);
 	GLuint setAttribute(const std::string &name);
 	int enable();
 	int disable();
-	int buildShaders(const char * vertFileName, const char *fragFileName);
+	int buildShaders(const std::string & vertFileName, const std::string &fragFileName);
 	~Shader();
 
 	static int initShaders(); // Initializes GLEW

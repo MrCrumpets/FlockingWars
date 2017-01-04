@@ -9,7 +9,7 @@
 
 int radius = 5;
 
-Spawner::Spawner(Renderer *r, Vec3f _pos, int _team)
+Spawner::Spawner(Renderer *r, glm::vec3 _pos, int _team)
     : Entity(r, _pos) {
 	center = pos;
 	team = _team;
@@ -22,14 +22,14 @@ Spawner::Spawner(Renderer *r, Vec3f _pos, int _team)
 	moneyRate = 0.25;
 	lastSpawned = 0;
         if(team == PLAYER)
-            color = Vec3f(129, 204, 60);
+            color = glm::vec3(129, 204, 60);
         else {
-            color = Vec3f(181, 40, 65);
+            color = glm::vec3(181, 40, 65);
         }
 	for(float b = 0.0; b < 2*PI; b+=(2*PI)/numLines){//Beta
 		for(float t = 0; t < PI; t += PI/numLines){//Theta
 			float y = rand()%radius*sin(b) * sin(t);
-			Line a(Vec3f(center.x+rand()%radius*sin(t)*cos(b), center.y+y, rand()%radius*cos(t)), Vec3f(center.x, center.y, 0));
+			Line a(glm::vec3(center.x+rand()%radius*sin(t)*cos(b), center.y+y, rand()%radius*cos(t)), glm::vec3(center.x, center.y, 0));
 			lines.push_back(a);
 		}
 	}
@@ -37,7 +37,6 @@ Spawner::Spawner(Renderer *r, Vec3f _pos, int _team)
 
 void Spawner::render(){
     renderer->pushMatrix();
-    renderer->applyCamera();
     renderer->uploadModelView();
     glColor4ub(color.x, color.y, color.z, 255);
     float z = 10;
@@ -123,11 +122,11 @@ Spawner::~Spawner() {
 	// TODO Auto-generated destructor stub
 }
 
-Line::Line(Vec3f _pos, Vec3f _center){
+Line::Line(glm::vec3 _pos, glm::vec3 _center){
 	pos = _pos;
 	center = _center;
-	vel = Vec3f(rand()%radius*2 - radius, rand()%radius*2 - radius, rand()%radius*2 - radius);
-	constVel = vel;
+	vel = glm::vec3(rand()%radius*2 - radius, rand()%radius*2 - radius, rand()%radius*2 - radius);
+	_constVel = glm::length(vel);
 }
 
 void Line::render()
@@ -137,7 +136,7 @@ void Line::render()
 }
 
 void Line::update(float dt){
-	acc = (center-pos).normalized()*constVel.length();
+	acc = glm::normalize(center-pos)*_constVel;
 	vel += acc*dt;
 	pos += vel*dt;
 }

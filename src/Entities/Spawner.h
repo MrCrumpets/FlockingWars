@@ -18,30 +18,31 @@ class Flock;
 const int numLines = 10;
 
 class Line : public Entity{
-public:
-	Line(){}
-	Line(Vec3f, Vec3f);
-	void render();
-	void update(float dt);
-	void spawnBoids(){};
-	Vec3f center;
-	Vec3f constVel;
+    private:
+        float _constVel;
+    public:
+        Line(){}
+        Line(glm::vec3, glm::vec3);
+        void render();
+        void update(float dt);
+        void spawnBoids(){};
+        glm::vec3 center;
 };
 
 class Spawner : public Entity {
-public:
-	Spawner(Renderer *r, Vec3f, int);
-	void render();
-	void update(float dt);
-	virtual ~Spawner();
-	std::vector<Line> lines;
-	Vec3f center;
-	int timer;
-	std::queue<unsigned char> queue;
-	float money;
-	float moneyRate;
-	int lastSpawned;
-	Vec3f screenPos;
+    public:
+        Spawner(Renderer *r, glm::vec3, int);
+        void render();
+        void update(float dt);
+        virtual ~Spawner();
+        std::vector<Line> lines;
+        glm::vec3 center;
+        int timer;
+        std::queue<unsigned char> queue;
+        float money;
+        float moneyRate;
+        int lastSpawned;
+        glm::vec3 screenPos;
 };
 
 #endif /* SPAWNER_H_ */

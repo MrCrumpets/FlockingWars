@@ -77,9 +77,9 @@ Particle::Particle(float _x, float _y, float angle){
 	life = 30;
 	dead = false;
 	const int maxVel = 15;
-	vel = Vec3f(cos(angle)*(rand()%maxVel), sin(angle)*(rand()%maxVel), 0.0f);
+	vel = glm::vec3(cos(angle)*(rand()%maxVel), sin(angle)*(rand()%maxVel), 0.0f);
 	int random = rand()%5;
-	color = Vec3f(colors[random][0], colors[random][1], colors[random][2]);
+	color = glm::vec3(colors[random][0], colors[random][1], colors[random][2]);
 }
 
 /**

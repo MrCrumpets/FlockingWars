@@ -9,15 +9,14 @@
  */
 
 #include "GameLevel.h"
-#include "../Util/Mat4.h"
 #include "../Systems/Graphics/Renderer.h"
 
 Renderer* renderer;
 Flock* selectedFlock;
 
 struct {
-    Vec3f pos;
-    Vec3f pressed;
+    glm::vec3 pos;
+    glm::vec3 pressed;
     bool dragging;
     float r,g,b,a;
 } cursor;
@@ -41,15 +40,15 @@ void GameLevel::init(){
     // Load Font
     renderer->loadFont("res/Inconsolata.ttf");
 
-    //spawner = new Spawner(Vec3f(1, 1, 1), PLAYER);
-    player = new Player(renderer, Vec3f(0, 0, 0), 25);
+    //spawner = new Spawner(glm::vec3(1, 1, 1), PLAYER);
+    player = new Player(renderer, glm::vec3(0, 0, 0), 25);
     entities.push_back(player);
     /*
        entities.push_back(spawner);
        Flock* f = new Flock();
        selectedFlock = f;
        for(int i = 0; i < 25; i++){
-       Boid* p = new Boid(Vec3f(rand()%25, rand()%25, 0.0f), PLAYER);
+       Boid* p = new Boid(glm::vec3(rand()%25, rand()%25, 0.0f), PLAYER);
        entities.push_back(p);
        f->addEntity(p);
        }
@@ -109,18 +108,18 @@ void GameLevel::render(){
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glClearColor(0.f,0.f,0.f,1.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    renderer->pushMatrix();
     renderer->setCamera(-player->pos.x, -player->pos.y, 50);
-    renderer->applyCamera();
+
+    renderer->pushMatrix();
     //renderCursor(renderer);
-    //renderer->renderString(Vec3f(0,0,0), "Player 1");
+    //renderer->renderString(glm::vec3(0,0,0), "Player 1");
     for(auto e : entities){
         e->render();
     }
     renderer->popMatrix();
 }
 
-bool GameLevel::contains(Vec3f in, Vec3f a, Vec3f b){
+bool GameLevel::contains(glm::vec3 in, glm::vec3 a, glm::vec3 b){
     if((in.x - a.x)*(in.x - b.x) < 0 && (in.y - a.y)*(in.y - b.y) < 0)
         return true;
     return false;
@@ -128,7 +127,6 @@ bool GameLevel::contains(Vec3f in, Vec3f a, Vec3f b){
 
 void GameLevel::renderCursor(Renderer* r){
     r->pushMatrix();
-    r->applyCamera();
     r->setColor(cursor.r, cursor.g, cursor.b, cursor.a);
     r->uploadModelView();
     glBegin(GL_QUADS);

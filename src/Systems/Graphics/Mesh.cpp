@@ -31,7 +31,7 @@ Mesh::Mesh(const std::vector<vertex> &vertices,
     // Cleanup Buffers
     // Apparently deleting these buffers is okay because they are still referenced by the VAO
     // and so will only get deleted when the VAO is deleted 
-    // --> One call to delete _vertex_array should be sufficne to free all the memory.
+    // --> One call to delete _vertex_array should be sufficient to free all the memory.
     glBindVertexArray(0);
     glDeleteBuffers(1, & _vertex_buffer);
     glDeleteBuffers(1, & _element_buffer);

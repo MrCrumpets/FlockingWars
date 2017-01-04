@@ -5,23 +5,16 @@
 using std::cout;
 using std::endl;
 
-static const GLfloat g_vertex_buffer_data[] = {
-	-1.f, -1.f,
-	 1.f, -1.f,
-	-1.f,  1.f,
-	 1.f,  1.f
-};
-
 static const GLushort g_element_buffer_data[] = { 0, 1, 2, 3 };
 
-void *fileContents(const char *filename, GLint *length)
+void *fileContents(const std::string &filename, GLint *length)
 {
-    FILE *f = fopen(filename, "r");
+    FILE *f = fopen(filename.c_str(), "r");
     void *buffer;
 
     if (!f) {
-        fprintf(stderr, "Unable to open %s for reading\n", filename);
-        return NULL;
+        std::cerr << "Unable to open " << filename << std::endl;
+        return nullptr;
     }
 
     fseek(f, 0, SEEK_END);
@@ -40,7 +33,7 @@ static void showInfoLog(GLuint object, PFNGLGETSHADERIVPROC glGet__iv, PFNGLGETS
 {
 
 
-	cout << "LOG:" << endl;
+    cout << "LOG:" << endl;
     GLint log_length;
     char *log;
 
@@ -51,55 +44,19 @@ static void showInfoLog(GLuint object, PFNGLGETSHADERIVPROC glGet__iv, PFNGLGETS
     free(log);
 }
 
-Shader::Shader(const char *vertFilename, const char *fragFilename, int _width, int _height){
-	buildShaders(vertFilename, fragFilename);
-	width = _width;
-	height = _height;
+Shader::Shader(const std::string &vertFilename, const std::string &fragFilename, int _width, int _height){
+    buildShaders(vertFilename, fragFilename);
+    width = _width;
+    height = _height;
 }
 
 int Shader::enable(){
-    glClearColor(0.f, 0.f, 0.f, 1.0f);
-    // Activate our shader program
     glUseProgram(g_resources.program);
-
-//    // Assign our uniform attributes
-//
-//    // Time
-//    glUniform1f(g_resources.uniforms.time, g_resources.time);
-//
-//    // Resolution
-//    glUniform2f(g_resources.uniforms.resolution, width, height);
-//
-    // Set up vertex array
-//    glBindBuffer(GL_ARRAY_BUFFER, g_resources.vertex_buffer);
-//    glVertexAttribPointer(
-//            g_resources.attributes.position /* attribute */,
-//            2,                              /* size */
-//            GL_FLOAT,                       /* type */
-//            GL_FALSE,                       /* normalized */
-//            sizeof(GLfloat)*2,              /* stride */
-//            (void*)0                        /* array buffer offset */
-//    );
-//    // Bind vertex array attributes
-//    glEnableVertexAttribArray(g_resources.attributes.position);
-//
-//    // Send draw call
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_resources.element_buffer);
-//    glDrawElements(
-//            GL_TRIANGLE_STRIP,  /* Draw mode */
-//            4,                  /* count */
-//            GL_UNSIGNED_SHORT,  /* type */
-//            (void*)0            /* element array buffer offset */
-//    );
-//
-//
-//    glDisableVertexAttribArray(g_resources.attributes.position);
-
-	return 0;
+    return 0;
 }
 
-GLuint Shader::setUniform(const char* name){
-	return glGetUniformLocation(g_resources.program, name);
+GLuint Shader::setUniform(const std::string &name){
+    return glGetUniformLocation(g_resources.program, name.c_str());
 }
 
 GLuint Shader::setAttribute(const std::string &name){
@@ -107,11 +64,11 @@ GLuint Shader::setAttribute(const std::string &name){
 }
 
 int Shader::disable(){
-	glUseProgram(0);
-	return 0;
+    glUseProgram(0);
+    return 0;
 }
 
-GLuint Shader::makeShader (GLenum type, const char *filename){
+GLuint Shader::makeShader (GLenum type, const std::string &filename){
     GLint length;
     GLchar *source = (GLchar*) fileContents(filename, &length);
     GLuint shader;
@@ -154,7 +111,7 @@ GLuint Shader::makeProgram(GLuint vertex_shader, GLuint fragment_shader)
 }
 
 
-int Shader::buildShaders(const char *vertFilename, const char *fragFilename){
+int Shader::buildShaders(const std::string &vertFilename, const std::string &fragFilename){
 
     // Shaders
     g_resources.vertex_shader = makeShader (GL_VERTEX_SHADER, vertFilename);

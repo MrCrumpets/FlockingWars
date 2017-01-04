@@ -9,6 +9,8 @@
 #define USERINTERFACE_H_
 
 #include "../util/includes.h"
+
+#include <glm/glm.hpp>
 #include <functional>
 #include <string>
 using std::vector;
@@ -17,27 +19,27 @@ struct Button;
 
 struct Widget{
 	Widget(){}
-	Widget(Vec2f _pos, Vec2f _size, Vec3f _colour, float _a){
+	Widget(glm::vec2 _pos, glm::vec2 _size, glm::vec3 _colour, float _a){
 		pos = _pos;
 		size = _size;
 		colour = _colour;
 		alpha = _a;
 		visible = true;
 	}
-	Vec2f pos;
-	Vec2f size;
-	Vec3f colour;
+	glm::vec2 pos;
+	glm::vec2 size;
+	glm::vec3 colour;
 	float alpha;
 	bool visible;
 	vector<Widget *> widgets;
 
 	virtual void draw();
 	void fadeTo (float finalAlpha);
-	Widget* addWidget(Vec2f pos, Vec2f size, Vec3f colour, float a);
-	void addProgressBar(Vec2f pos, Vec2f size, Vec3f colour, float a, float &maxVal,float &var, bool axis);
-	Button* addButton(Vec2f _pos, Vec2f _size, Vec3f colour, float a, char* text, float scale);
-	void addTextBox(Vec2f _pos, Vec2f _size, Vec3f colour, float a, int &number, float scale);
-	void addTextBox(Vec2f _pos, Vec2f _size, Vec3f colour, float a, std::string s, float scale);
+	Widget* addWidget(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a);
+	void addProgressBar(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a, float &maxVal,float &var, bool axis);
+	Button* addButton(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, std::string text, float scale);
+	void addTextBox(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, int &number, float scale);
+	void addTextBox(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, std::string s, float scale);
 	virtual bool checkHover(int mousex, int mousey);
 	virtual bool mouseUp();
 	virtual void update();
@@ -45,7 +47,7 @@ struct Widget{
 };
 
 struct ProgressBar:Widget{
-	ProgressBar(Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, float &_maxVal, float &_var, bool yaxis):Widget(_pos, _size, _colour, _a){
+	ProgressBar(glm::vec2 _pos, glm::vec2 _size, glm::vec3 _colour, float _a, float &_maxVal, float &_var, bool yaxis):Widget(_pos, _size, _colour, _a){
 		maxVal = &_maxVal;
 		var = &_var;
 		axis = yaxis;
@@ -57,8 +59,8 @@ struct ProgressBar:Widget{
 };
 
 struct TextBox:Widget{
-	TextBox( Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, std::string _text, float _scale);
-	TextBox(Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, int &_number, float _scale):Widget(_pos, _size, _colour, _a){
+	TextBox( glm::vec2 _pos, glm::vec2 _size, glm::vec3 _colour, float _a, std::string _text, float _scale);
+	TextBox(glm::vec2 _pos, glm::vec2 _size, glm::vec3 _colour, float _a, int &_number, float _scale):Widget(_pos, _size, _colour, _a){
 		number = &_number;
 		scale = _scale;
 	}
@@ -74,7 +76,7 @@ struct Callback {
 };
 
 struct Button:Widget{
-	Button(Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, char* _text, float _scale);
+	Button(glm::vec2 _pos, glm::vec2 _size, glm::vec3 _colour, float _a, std::string _text, float _scale);
 
 	template <class T>
 	void hook(void(T::*_callback)(void), T* _object){
@@ -85,7 +87,7 @@ struct Button:Widget{
 	int hoverTime;
 	float scale;
 	int padding;
-	char* text;
+	std::string text;
 	GLuint textDl;
 	bool checkHover(int mousex, int mousey);
 	bool mouseUp();
@@ -99,9 +101,9 @@ public:
 	void draw();
 	void update();
 	void mouseUp();
-	Widget* createWidget(Vec2f pos, Vec2f size, Vec3f colour, float a);
-	void createProgressBar(Vec2f pos, Vec2f size, Vec3f colour, float a, float &maxVal,float &var, bool axis);
-	void createButton(Vec2f pos, Vec2f size, Vec3f colour, float a);
+	Widget* createWidget(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a);
+	void createProgressBar(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a, float &maxVal,float &var, bool axis);
+	void createButton(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a);
 	vector<Widget*> widgets;
 	virtual ~UserInterface();
 };

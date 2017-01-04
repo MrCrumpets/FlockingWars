@@ -15,12 +15,12 @@ using std::vector;
 
 class QuadTree {
 public:
-	QuadTree(Vec2f min, Vec2f max, vector<Entity*> entities, unsigned int depth);
+	QuadTree(glm::vec2 min, glm::vec2 max, vector<Entity*> entities, unsigned int depth);
 	void addEntity(Entity e);
 	void split();
 	void render();
-	vector<Entity*> findEntities(Vec2f pos, float r);
-	Vec2f _min, _max, _mid;
+	vector<Entity*> findEntities(glm::vec2 pos, float r);
+	glm::vec2 _min, _max, _mid;
 	vector<Entity*> _entities;
 	QuadTree* children[4];
 	unsigned int _depth;

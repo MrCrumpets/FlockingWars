@@ -16,8 +16,8 @@ Menu::Menu(int width, int height) {
 
 void Menu::init(){
 	ui = new UserInterface();
-	Widget* menu = ui->createWidget(Vec2f(width/2, height/2), Vec2f(128, 64), Vec3f(150, 150, 150), 1.f);
-	Button* newGameButton = menu->addButton(Vec2f(0, 0), Vec2f(128, 64), Vec3f(129, 204, 60), 255, "Start", 0.4);
+	Widget* menu = ui->createWidget(glm::vec2(width/2, height/2), glm::vec2(128, 64), glm::vec3(150, 150, 150), 1.f);
+	Button* newGameButton = menu->addButton(glm::vec2(0, 0), glm::vec2(128, 64), glm::vec3(129, 204, 60), 255, "Start", 0.4);
 	newGameButton->hook(&Menu::newGame, this);
 }
 

@@ -153,15 +153,15 @@ void InteractiveMesh::createImpulse (float x, float y, float strength){
 	}
 }
 
-double InteractiveMesh::getNormal(double x, double y, Vec3f &normal){
+double InteractiveMesh::getNormal(double x, double y, glm::vec3 &normal){
 	int row = (y/(float)height)*ROWS;
 	int column = (x/(float)width)*COLS;
 	int index = row * COLS + column;
-	Vec3f a = Vec3f(points[index]->x, points[index]->y, points[index]->z);
+	glm::vec3 a = glm::vec3(points[index]->x, points[index]->y, points[index]->z);
 	MeshPoint* mb = 0;
 	MeshPoint* mc = 0;
-	Vec3f b;
-	Vec3f c;
+	glm::vec3 b;
+	glm::vec3 c;
 
 	if(row > 0)
 		mb = points[(row-1)*COLS + column];
@@ -172,9 +172,9 @@ double InteractiveMesh::getNormal(double x, double y, Vec3f &normal){
 		mc = points[row*COLS + column-1];
 	else
 		mc = points[row*COLS + column+1];
-	b = a-Vec3f(mb->x, mb->y, mb->z);
-	c = a-Vec3f(mc->x, mc->y, mc->z);
-	normal = b.cross(c);
+	b = a-glm::vec3(mb->x, mb->y, mb->z);
+	c = a-glm::vec3(mc->x, mc->y, mc->z);
+	normal = glm::cross(b, c);
 	return a.z;
 }
 
@@ -190,11 +190,11 @@ double* getRotationMatrix(double x, double y){
 		return mat;
 	int index = row * COLS + column;
 	MeshPoint** points = mesh->points;
-	Vec3f a = Vec3f(points[index]->x, points[index]->y, points[index]->z);
+	glm::vec3 a = glm::vec3(points[index]->x, points[index]->y, points[index]->z);
 	MeshPoint* mb = 0;
 	MeshPoint* mc = 0;
-	Vec3f b;
-	Vec3f c;
+	glm::vec3 b;
+	glm::vec3 c;
 
 	if(row > 0)
 		mb = points[(row-1)*COLS + column];//y
@@ -205,11 +205,11 @@ double* getRotationMatrix(double x, double y){
 		mc = points[row*COLS + column-1];//x
 	else
 		mc = points[row*COLS + column+1];
-	b = a-Vec3f(mb->x, mb->y, mb->z);
-	c = a-Vec3f(mc->x, mc->y, mc->z);
-	Vec3f normal = c.cross(b).normalized();
-	Vec3f x1 = Vec3f(1.0f, 0, (mc->z-a.z)/(mc->x-a.x)).normalized();
-	Vec3f y1 = Vec3f(0, 1.0f, (mb->z-a.z)/(mb->y-a.y)).normalized();
+	b = a-glm::vec3(mb->x, mb->y, mb->z);
+	c = a-glm::vec3(mc->x, mc->y, mc->z);
+	glm::vec3 normal = glm::normalize(glm::cross(c, b));
+	glm::vec3 x1 = glm::normalize(glm::vec3(1.0f, 0, (mc->z-a.z)/(mc->x-a.x)));
+	glm::vec3 y1 = glm::normalize(glm::vec3(0, 1.0f, (mb->z-a.z)/(mb->y-a.y)));
 //	cout << x1.x << " " << x1.y << " " << x1.z << endl;
 //	cout << y1.x << " " << y1.y << " " << y1.z << endl;
 //	cout << normal.x << " " << normal.y << " " << normal.z << endl;

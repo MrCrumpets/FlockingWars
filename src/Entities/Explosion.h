@@ -20,7 +20,7 @@ public:
 	void interact(Entity* e){}
 	virtual ~Particle();
 	short life;
-	Vec2f vsize;
+	glm::vec2 vsize;
 };
 class Explosion : public Entity{
 public:

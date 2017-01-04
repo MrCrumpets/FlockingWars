@@ -42,20 +42,20 @@ void UserInterface::mouseUp(){
 	}
 }
 
-Widget* UserInterface::createWidget(Vec2f _pos, Vec2f _size, Vec3f colour, float a){
+Widget* UserInterface::createWidget(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a){
 	Widget* w = new Widget(_pos, _size, colour/255.f, a/255.0f);
 	widgets.push_back(w);
 	return w;
 }
 
-void UserInterface::createProgressBar(Vec2f _pos, Vec2f _size, Vec3f colour, float a, float &maxVal, float &var, bool yaxis){
+void UserInterface::createProgressBar(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, float &maxVal, float &var, bool yaxis){
 	ProgressBar* pb = new ProgressBar(_pos, _size, colour/255.f, a/255.0f, maxVal, var, yaxis);
 	widgets.push_back(pb);
 }
 
 UserInterface::~UserInterface() {}
 
-TextBox::TextBox( Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, std::string _text, float _scale):Widget(_pos, _size, _colour, _a){
+TextBox::TextBox( glm::vec2 _pos, glm::vec2 _size, glm::vec3 _colour, float _a, std::string _text, float _scale):Widget(_pos, _size, _colour, _a){
 	text = _text;
 	scale = _scale;
 //	size.x = stringWidth(text, scale);
@@ -70,7 +70,7 @@ void TextBox::draw(){
 //		renderNum(*number, pos.x, pos.y, 0, scale);
 }
 
-Button::Button(Vec2f _pos, Vec2f _size, Vec3f _colour, float _a, char* _text, float _scale):Widget(_pos, _size, _colour, _a){
+Button::Button(glm::vec2 _pos, glm::vec2 _size, glm::vec3 _colour, float _a, std::string _text, float _scale):Widget(_pos, _size, _colour, _a){
 	text = _text;
 	hover = false;
 	hoverTime = 0;
@@ -193,31 +193,31 @@ void Widget::draw(){
 	}
 }
 
-Widget* Widget::addWidget(Vec2f _pos, Vec2f _size, Vec3f colour, float a){
+Widget* Widget::addWidget(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a){
 	Widget* w = new Widget(pos + _pos, _size, colour/255.f, a/255.0f);
 	widgets.push_back(w);
 	return w;
 }
 
-void Widget::addTextBox(Vec2f _pos, Vec2f _size, Vec3f colour, float a, std::string text, float scale){
+void Widget::addTextBox(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, std::string text, float scale){
 	TextBox* tb = NULL;
 	tb = new TextBox(pos + _pos, _size, colour/255.f, a/255.0f, text, scale);
 	widgets.push_back(tb);
 }
 
-void Widget::addTextBox(Vec2f _pos, Vec2f _size, Vec3f colour, float a, int &number, float scale){
+void Widget::addTextBox(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, int &number, float scale){
 	TextBox* tb = NULL;
 	tb = new TextBox(pos + _pos, _size, colour/255.0f, a/255.0f, number, scale);
 	widgets.push_back(tb);
 }
 
 
-void Widget::addProgressBar(Vec2f _pos, Vec2f _size, Vec3f colour, float a, float &maxVal, float &var, bool yaxis){
+void Widget::addProgressBar(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, float &maxVal, float &var, bool yaxis){
 	ProgressBar* pb = new ProgressBar(pos + _pos, _size, colour/255.f, a/255.0f, maxVal, var, yaxis);
 	widgets.push_back(pb);
 }
 
-Button* Widget::addButton(Vec2f _pos, Vec2f _size, Vec3f colour, float a, char* text, float scale){
+Button* Widget::addButton(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, std::string text, float scale){
 	Button* pb = new Button(pos + _pos, _size, colour/255.0f, a/255.0f, text, scale);
 	widgets.push_back(pb);
 	return pb;

@@ -20,8 +20,8 @@ class Entity {
     protected:
         Renderer *renderer;
     public:
-	Vec3f pos, oldpos, vel, acc, dir, angvel;
-        Vec3f color;
+	glm::vec3 pos, oldpos, vel, acc, dir, angvel;
+        glm::vec3 color;
 	float damage, health, maxHealth;
 	bool dead, explodes, selected;
 	unsigned char type;
@@ -35,7 +35,7 @@ class Entity {
 		dead = false;
 	}
 
-	Entity(Renderer *r, Vec3f _pos) : renderer(r), pos(_pos) {}
+	Entity(Renderer *r, glm::vec3 _pos) : renderer(r), pos(_pos) {}
 	virtual ~Entity(){}
 
 	virtual void die(){dead = true;}

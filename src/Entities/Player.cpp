@@ -22,7 +22,7 @@ static const std::vector<unsigned int> indices { 0, 1, 2, 1, 2, 3, 3, 2, 4, 4, 2
 const float decay = 0.95;
 
 
-Player::Player(Renderer *r, Vec3f _pos, float _size) 
+Player::Player(Renderer *r, glm::vec3 _pos, float _size)
     : Entity(r, _pos), size(_size), _mesh(vertices, indices) {
         type = SHIP;
         team = PLAYER;
@@ -35,20 +35,19 @@ Player::Player(Renderer *r, Vec3f _pos, float _size)
         gunTimer = 1;
         health = maxHealth;
         explodes = true;
-        dir = Vec3f(1, 0, 0);
+        dir = glm::vec3(1, 0, 0);
         dead = false;
         rotspeed = 0;
         velSpeed = 2500;
         //RGB values of the ship mesh
-        color = Vec3f(129, 204, 60);
+        color = glm::vec3(129, 204, 60);
     }
 
 void Player::render(){
     renderer->pushMatrix();
     renderer->setColor(1.0f, 0.0f, 0.0f, 1.0f);
-    renderer->rotate(dir.theta(), 0.0f, 0.0f, 1.0f);
     renderer->translate(pos.x, pos.y, 0.0f);
-    renderer->uploadModelView();
+    renderer->rotate(glm::acos(glm::dot(dir, glm::vec3(1.f, 0.f, 0.f))), 0.0f, 0.0f, 1.0f);
     _mesh.draw();
     renderer->popMatrix();
     renderer->setColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -71,16 +70,16 @@ void Player::update(float dt){
     vel *= decay;
     vel += acc * dt;
     pos += vel * dt;
-    dir += Vec3f(-dir.y, dir.x, 0.0f)*rotspeed*dt;
-    dir.normalize();
+    dir += glm::vec3(-dir.y, dir.x, 0.0f)*rotspeed*dt;
+    dir = glm::normalize(dir);
     rotspeed *= 0.95;
     acc*=0.9;
-    if(vel.length() > maxVel){
-        vel = vel.normalized()*maxVel;
+    if(glm::dot(vel,vel) > maxVel){
+        vel = glm::normalize(vel)*maxVel;
     }
 }
 
-void Player::respawn(Vec3f _pos){
+void Player::respawn(glm::vec3 _pos){
     health = maxHealth;
     dead = false;
     pos = _pos;
@@ -88,8 +87,8 @@ void Player::respawn(Vec3f _pos){
 }
 
 void Player::interact(Entity * e){
-    Vec3f dist = pos - e->pos;
-    float distance = dist.lengthSq();
+    glm::vec3 dist = pos - e->pos;
+    float distance = glm::dot(dist,dist);
     if(e->team == team){
     }
     else if(e->team != OTHER)
@@ -107,7 +106,7 @@ void Player::interact(Entity * e){
  */
 void Player::shoot(){
     if(gunHeat < maxHeat && gunTimer <= 0){
-        entityStack.push_back(new Bullet (renderer, pos, dir, vel, bulletRange, team));
+        entityStack.push_back(new Bullet (renderer, pos, vel, bulletRange, team));
         gunHeat += 5;
         gunTimer = 30.0/1000;
     }
@@ -117,7 +116,7 @@ void Player::shoot(){
  * Accelerates the ship in the it is facing
  */
 void Player::accelerate(float speed){
-    acc += dir.normalized() * 40;
+    acc += glm::normalize(dir) * 40.f;
 }
 
 /**

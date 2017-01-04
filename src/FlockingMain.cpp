@@ -16,7 +16,6 @@
 
 #include "stdlib.h"
 #include "Util/init.h"
-#include "Util/Mat4.h"
 
 sf::Window sfmlWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars", 
         sf::Style::Default, sf::ContextSettings(32, 0, 0, 3, 3));

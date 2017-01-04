@@ -8,7 +8,7 @@
 #include "Flock.h"
 
 float decay = 0.998;
-Vec3f orbit;
+glm::vec3 orbit;
 GLuint vertexBufferObject;
 
 const float vertexData[] = {
@@ -40,21 +40,21 @@ void Flock::removeEntity(Entity* e){
 
 bool Flock::update(float dt){
 	for(unsigned i = 0; i < members.size(); i++){
-		members[i]->acc -= (members[i]->pos - orbit)*(rand()%10)/10;
+		members[i]->acc -= (members[i]->pos - orbit) * static_cast<float>((rand()%10)/10.f);
 	}
 	return members.size();
 }
 
-void Flock::setObjective(Vec3f o){
+void Flock::setObjective(glm::vec3 o){
 	orbit = o;
 }
 
-Boid::Boid(Renderer * r, Vec3f _pos, int _team)
+Boid::Boid(Renderer * r, glm::vec3 _pos, int _team)
     : Entity(r, _pos) {
     if(team == PLAYER)
-        color = Vec3f(129, 204, 60);
+        color = glm::vec3(129, 204, 60);
     else {
-        color = Vec3f(181, 40, 65);
+        color = glm::vec3(181, 40, 65);
     }
     team = _team;
     type = BOID;
@@ -64,32 +64,21 @@ Boid::Boid(Renderer * r, Vec3f _pos, int _team)
     minSq = minSpeed*minSpeed;
     maxSq = maxSpeed*maxSpeed;
     pos = _pos;
-    vel = Vec3f(rand()%(int)maxSpeed-maxSpeed/2, rand()%(int)maxSpeed-maxSpeed/2, 0.0f);
+    vel = glm::vec3(rand()%(int)maxSpeed-maxSpeed/2, rand()%(int)maxSpeed-maxSpeed/2, 0.0f);
     dead = false;
-    dir = Vec3f(0, 1, 0);
+    dir = glm::vec3(0, 1, 0);
     value = 5;
     damage = 30;
     health = maxHealth = 90;
     fear = 0;
-    glGenBuffers(1, &vertexBufferObject);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Boid::render(){
 	renderer->pushMatrix();
 	//renderer->setColor(r, g, b, 1.0f);
 //	renderer->scale(0.5f, 0.5f, 0.5f);
-	renderer->rotate(dir.theta(), 0.0f, 0.0f, 1.0f);
-	renderer->applyCamera();
+	//renderer->rotate(dir.theta(), 0.0f, 0.0f, 1.0f);
 	renderer->translate(pos.x, pos.y, 0.0f);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	glUniformMatrix4fv(renderer->uniforms.modelMat, 1, GL_FALSE, (GLfloat*)renderer->currentMatrix().m);
-	glDrawArrays(GL_TRIANGLES, 0, sizeof(vertexData)/4);
-	glDisableVertexAttribArray(0);
 	renderer->popMatrix();
 }
 
@@ -97,18 +86,19 @@ void Boid::update(float dt){
 	if(health < 0)
 		die();
 	maxSpeed = maxSpeed + fear;
-	vel += (acc/(30.0/1000))*dt;
+	vel += acc * 33.f * dt;
 
-	if(vel.lengthSq() < minSq){
-		vel = vel.normalized()*minSpeed;
+        float dist = glm::dot(vel, vel);
+	if(dist < minSq){
+		vel = glm::normalize(vel)*minSpeed;
 	}
-	else if(vel.lengthSq() > maxSq){
-		vel = vel.normalized()*maxSpeed;
+	else if(dist > maxSq){
+		vel = glm::normalize(vel)*maxSpeed;
 	}
 	pos += vel * dt;
 	vel *= decay;
-	acc.zero();
-	dir = vel.normalized();
+	acc = glm::vec3();
+	dir = glm::normalize(vel);
 }
 
 //Thresholds
@@ -121,9 +111,9 @@ float coheseWeight = 8;
 float alignWeight = 1;
 
 void Boid::interact(Entity* e){
-	Vec3f dist = pos - e->pos;
-	float dsq = dist.lengthSq();
-	dist = dist.normalized();
+	glm::vec3 dist = pos - e->pos;
+	float dsq = glm::dot(dist, dist);
+	dist = glm::normalize(dist);
 	if(dsq <= interactZone)
 	{
 		float ratio = dsq/interactZone;
@@ -134,13 +124,13 @@ void Boid::interact(Entity* e){
 		}
 		else if(ratio < alignThresh){
 			float weight = (ratio - alignThresh)/(1.0f - alignThresh);
-			double force = (1.0f - (cos(weight*PI*2) * -0.5f + 0.5f))*alignWeight;
-			acc += e->vel.normalized()*force;
+			float force = (1.0f - (cos(weight*PI*2) * -0.5f + 0.5f))*alignWeight;
+			acc += glm::normalize(e->vel) * force;
 		}
 		else {
 			//Attract
 			float weight = (ratio - repelThresh)/(1.0f - repelThresh);
-			double force = (1.0f - (cos(weight*PI*2) * -0.5f + 0.5f))*coheseWeight;
+			float force = (1.0f - (cos(weight*PI*2) * -0.5f + 0.5f))*coheseWeight;
 			acc -= dist*force;
 		}
 	}

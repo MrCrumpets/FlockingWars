@@ -16,7 +16,7 @@ static const std::vector<vertex> vertices {
     {{- 0.5f,  1.0f, 0.0f }},
 };
 
-static const std::vector<unsigned int> indices { 
+static const std::vector<unsigned int> indices {
     0, 1, 2, 3, 0
 };
 
@@ -35,11 +35,11 @@ static const std::vector<unsigned int> indices {
  *                      velocity.
  */
 
-Bullet::Bullet(Renderer *r, Vec3f _pos, Vec3f _dir, Vec3f _vel,
+Bullet::Bullet(Renderer *r, glm::vec3 _pos, glm::vec3 _vel,
         int bulletRange, unsigned char _team)
 : Entity(r, _pos), _mesh(vertices, indices, MeshType::LineStrip) {
-    dir = _dir;
-    vel = _vel + _dir*750;
+    dir = glm::normalize(_vel);
+    vel = _vel + dir*750.f;
     dead = false;
     maxEnergy = energy = (float)bulletRange;
     type = BULLET;
@@ -47,9 +47,9 @@ Bullet::Bullet(Renderer *r, Vec3f _pos, Vec3f _dir, Vec3f _vel,
     team = _team;
     size = 3;
     if(team == PLAYER) {
-        color = Vec3f(129, 204, 60);
+        color = glm::vec3(129, 204, 60);
     } else {
-        color = Vec3f(181, 40, 65);
+        color = glm::vec3(181, 40, 65);
     }
 }
 
@@ -76,7 +76,7 @@ void Bullet::update(float dt){
 void Bullet::render(){
     renderer->pushMatrix();
     renderer->setColor(color.x, color.y, color.z, (energy/maxEnergy));
-    renderer->rotate(dir.theta(), 0.0f, 0.0f, 1.0f);
+    renderer->rotate(glm::acos(glm::dot(dir, glm::vec3(1.f, 0.f, 0.f))), 0.0f, 0.0f, 1.0f);
     renderer->translate(pos.x, pos.y, 0.0f);
     renderer->uploadModelView();
     _mesh.draw();
@@ -104,15 +104,15 @@ void Bullet::interact(Entity* e){
                 dead = true;
                 return;
             }
-            Vec3f vb = pos - oldpos;
-            Vec3f va = e->pos - e->oldpos;
-            Vec3f ab = oldpos - e->oldpos;
-            Vec3f vba = (vb-va);
-            if(ab.lengthSq() < 625){
+            glm::vec3 vb = pos - oldpos;
+            glm::vec3 va = e->pos - e->oldpos;
+            glm::vec3 ab = oldpos - e->oldpos;
+            glm::vec3 vba = (vb-va);
+            if(glm::dot(ab, ab) < 625){
                 float rab = 5;
-                float c = ab.dot(ab) - (rab*rab);
-                float b = 2*(vba.dot(ab));
-                float a = vba.dot(vba);
+                float c = glm::dot(ab, ab) - (rab*rab);
+                float b = 2*(glm::dot(vba, ab));
+                float a = glm::dot(vba, vba);
                 float desc = (b*b - (4*a*c));
                 if(desc > 0){
                     float sq = sqrt(desc);
