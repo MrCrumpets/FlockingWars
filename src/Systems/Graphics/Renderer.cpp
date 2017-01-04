@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include "Renderer.h"
 #include "Shaders/shaders.h"
 
@@ -149,6 +150,14 @@ void Renderer::popMatrix(){
 glm::mat4 Renderer::translate(float x, float y, float z){
     glm::mat4 t = glm::translate(glm::mat4(1.f), glm::vec3(x, y, z));
     matrixStack.back() = matrixStack.back() * t;
+    uploadModelView();
+    return matrixStack.back();
+}
+
+glm::mat4 Renderer::rotate(const glm::vec3 &from, const glm::vec3 &to){
+    auto q = glm::quat( from, to );
+    auto m = glm::toMat4( q );
+    matrixStack.back() = matrixStack.back() * m;
     uploadModelView();
     return matrixStack.back();
 }

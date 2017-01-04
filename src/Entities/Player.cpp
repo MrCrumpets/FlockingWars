@@ -47,10 +47,9 @@ void Player::render(){
     renderer->pushMatrix();
     renderer->setColor(1.0f, 0.0f, 0.0f, 1.0f);
     renderer->translate(pos.x, pos.y, 0.0f);
-    renderer->rotate(glm::acos(glm::dot(dir, glm::vec3(1.f, 0.f, 0.f))), 0.0f, 0.0f, 1.0f);
+    renderer->rotate(glm::vec3(1.f, 0.f, 0.f), dir);
     _mesh.draw();
     renderer->popMatrix();
-    renderer->setColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 /*
