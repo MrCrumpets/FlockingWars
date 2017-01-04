@@ -64,25 +64,6 @@ void Renderer::bindTexture(int texture){
     glUniform1i(uniforms.texture, 0);
 }
 
-GLuint Renderer::makeBuffer(GLenum target, const void *buffer_data, GLsizei buffer_size){
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(target, vbo);
-    glBufferData(target, buffer_size, buffer_data, GL_STATIC_DRAW);
-    return vbo;
-}
-
-void Renderer::drawVertexArray(const std::vector<float> &vertices){
-    GLuint vbo = makeBuffer(GL_ARRAY_BUFFER, &vertices[0], vertices.size());
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glEnableVertexAttribArray(0);
-    /*
-       glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-       glDrawArrays(GL_TRIANGLES, 0, vertices.size()/4);
-       glDisableVertexAttribArray(0);
-       */
-}
-
 void Renderer::renderString(glm::vec3 pos, const std::string &text){
     pushMatrix();
     for(unsigned i = 0; i < text.size(); ++i){
