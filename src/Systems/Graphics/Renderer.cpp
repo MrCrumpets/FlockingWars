@@ -38,15 +38,6 @@ void Renderer::loadShader(const std::string &name){
 glm::vec3 Renderer::unProject(int x, int y, double z){
     glm::ivec4 viewport;
     glGetIntegerv(GL_VIEWPORT, glm::value_ptr(viewport));
-    /*double mv[16], p[16];
-      for(int i = 0; i < 16; i++){
-      mv[i] = (double)(currentMatrix()).m[i];
-      p[i] = (double)projection.m[i];
-      }
-      double wx = x, wy = y, wz = z;
-      double vx = -1, vy = -1, vz = 0-1;
-      gluUnProject(wx, wy, wz, mv, p, viewport, &vx, &vy, &vz);
-      return glm::vec3(vx, vy, vz); */
     return glm::unProject(glm::vec3(x, y, z), currentMatrix(), projection, viewport);
 }
 
