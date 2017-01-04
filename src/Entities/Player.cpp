@@ -73,7 +73,7 @@ void Player::update(float dt){
     dir = glm::normalize(dir);
     rotspeed *= 0.95;
     acc*=0.9;
-    if(glm::dot(vel,vel) > maxVel){
+    if(glm::length(vel) > maxVel){
         vel = glm::normalize(vel)*maxVel;
     }
 }
