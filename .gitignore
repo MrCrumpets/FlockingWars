@@ -3,6 +3,7 @@ shader/
 includes/
 
 *.h.gch
+*.hpp.gch
 
 #################
 ## Eclipse
