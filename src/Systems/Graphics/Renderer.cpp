@@ -15,20 +15,21 @@
 Shader* shader;
 glm::mat4 projection;
 
-Renderer::Renderer(int width, int height) {
-    this->height = height;
-    this->width = width;
-    std::cout << matrixStack.size() << std::endl;
-    matrixStack.push_back(glm::mat4(1.0f));
-    std::cout << matrixStack.size() << std::endl;
+Renderer::Renderer(int width, int height)
+    : width(width), height(height) {
+
+    // Load shader
     loadShader("");
     useShader(0);
+
     uniforms.projection = setUniform("uprojection");
     uniforms.camera = setUniform("ucamera");
     uniforms.model = setUniform("umodel");
     uniforms.color = setUniform("ucolor");
 
-    glm::mat4 projection = setProjection(width, height);
+    matrixStack.push_back(glm::mat4(1.0f));
+    setProjection(width, height);
+    setCamera(0, 0, 0);
 }
 
 void Renderer::loadShader(const std::string &name){
