@@ -19,7 +19,8 @@ static const std::vector<vertex> vertices {
 
 static const std::vector<unsigned int> indices { 0, 1, 2, 1, 2, 3, 3, 2, 4, 4, 2, 0 };
 
-const float decay = 0.95;
+static const float decay = 0.95;
+static const float ACCEL = 10.f;
 
 
 Player::Player(Renderer *r, glm::vec3 _pos, float _size)
@@ -39,8 +40,11 @@ Player::Player(Renderer *r, glm::vec3 _pos, float _size)
         dead = false;
         rotspeed = 0;
         velSpeed = 2500;
-        //RGB values of the ship mesh
-        color = glm::vec3(129, 204, 60);
+        if(team == PLAYER) {
+            color = glm::vec3(129, 204, 60);
+        } else {
+            color = glm::vec3(181, 40, 65);
+        }
     }
 
 void Player::render(){
@@ -105,7 +109,7 @@ void Player::interact(Entity * e){
  */
 void Player::shoot(){
     if(gunHeat < maxHeat && gunTimer <= 0){
-        entityStack.push_back(new Bullet (renderer, pos, vel, bulletRange, team));
+        entityStack.push_back(new Bullet (renderer, pos, vel + dir*15.f, dir, bulletRange, team));
         gunHeat += 5;
         gunTimer = 30.0/1000;
     }
@@ -115,7 +119,7 @@ void Player::shoot(){
  * Accelerates the ship in the it is facing
  */
 void Player::accelerate(float speed){
-    acc += glm::normalize(dir) * 40.f;
+    acc += glm::normalize(dir) * ACCEL;
 }
 
 /**

@@ -108,7 +108,7 @@ void GameLevel::render(){
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glClearColor(0.f,0.f,0.f,1.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    renderer->setCamera(-player->pos.x, -player->pos.y, 50);
+    renderer->setCamera(player->pos.x, player->pos.y, 100);
 
     renderer->pushMatrix();
     //renderCursor(renderer);

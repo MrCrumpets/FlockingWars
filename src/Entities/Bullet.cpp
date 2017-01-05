@@ -35,17 +35,17 @@ static const std::vector<unsigned int> indices {
  *                      velocity.
  */
 
-Bullet::Bullet(Renderer *r, glm::vec3 _pos, glm::vec3 _vel,
-        int bulletRange, unsigned char _team)
-: Entity(r, _pos), _mesh(vertices, indices, MeshType::LineStrip) {
-    dir = glm::normalize(_vel);
-    vel = _vel + dir*750.f;
-    dead = false;
-    maxEnergy = energy = (float)bulletRange;
+Bullet::Bullet(Renderer *r, glm::vec3 pos, glm::vec3 initialVel, glm::vec3 orientation, 
+        int bulletRange, unsigned char team)
+: Entity(r, pos), 
+    _mesh(vertices, indices, MeshType::LineStrip) {
+    dir = orientation;
+    vel = initialVel;
+    this->team = team;
     type = BULLET;
-    explodes = false;
-    team = _team;
-    size = 3;
+    dead = false;
+
+    maxEnergy = energy = (float)bulletRange;
     if(team == PLAYER) {
         color = glm::vec3(129, 204, 60);
     } else {
@@ -68,20 +68,16 @@ void Bullet::update(float dt){
     if(energy < 0) {
         dead = true;
     }
-    if(pos.x > width || pos.x < 0 || pos.y > height || pos.y < 0){
-        dead = true;
-    }
 }
 
 void Bullet::render(){
     renderer->pushMatrix();
-    renderer->setColor(color.x, color.y, color.z, (energy/maxEnergy));
-    renderer->rotate(glm::acos(glm::dot(dir, glm::vec3(1.f, 0.f, 0.f))), 0.0f, 0.0f, 1.0f);
-    renderer->translate(pos.x, pos.y, 0.0f);
-    renderer->uploadModelView();
-    _mesh.draw();
+        renderer->setColor(color.r, color.g, color.b, (energy/maxEnergy));
+        renderer->translate(pos.x, pos.y, 0.0f);
+        renderer->scale(0.1f, 0.1f, 0.f);
+        renderer->rotate(glm::vec3(0.f, 1.f, 0.f), dir);
+        _mesh.draw();
     renderer->popMatrix();
-    renderer->setColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 /**
  * Determines whether this bullet intersects with the sphere described in the params
@@ -136,7 +132,8 @@ void Bullet::interact(Entity* e){
  * @return dead
  *              The bool stating the condition of the bullet object
  */
-bool Bullet::isDead(void){
+bool Bullet::isDead(){
     return dead;
 }
+
 Bullet::~Bullet() {}

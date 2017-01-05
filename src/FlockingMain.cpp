@@ -145,7 +145,7 @@ int main() {
                 // Check for OpenGL errors
                 GLenum err;
                 while ((err = glGetError()) != GL_NO_ERROR) {
-                    std::cerr << "Post-render OpenGL error: " << err << ": " << gluErrorString(err) << std::endl;
+                    std::cerr << "Post-render OpenGL error: " << err << std::endl;
                 }
 
 		deltatime = clock.getElapsedTime();
