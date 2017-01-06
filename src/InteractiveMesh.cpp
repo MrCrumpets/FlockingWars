@@ -1,17 +1,3 @@
-/*
- * InteractiveMesh.cpp
- *
- *      This was just a little experiment initially but turned into a fully-fledged feature.
- *      It is a grid/mesh the lies in the background and reacts to input from the game. Explosions
- *      and ship movement send ripples through the mesh causing some cool effects.
- *
- *      It is really just a container for a list of vertices.
- *
- *  Created on: Jun 12, 2010
- *      Author: Nathan
- *
- */
-
 #include "InteractiveMesh.h"
 
 static const float gridSize = 5.f;
