@@ -21,12 +21,11 @@ struct {
     float r,g,b,a;
 } cursor;
 
-GameLevel::GameLevel(int width, int height) {
+GameLevel::GameLevel(int width, int height) 
+    : width(width), height(height) {
     camera.x = -width/2;
     camera.y = -width/2;
     camera.z = -1450;
-    this->width = width;
-    this->height = height;
     cursor.r = cursor.g = cursor.b = cursor.a = 1.0f;
     cursor.dragging = false;
 }
@@ -34,17 +33,16 @@ GameLevel::GameLevel(int width, int height) {
 void GameLevel::init(){
 
     renderer = new Renderer(width, height);
-    renderer->setCamera(0.5f, -0.25f, 150.0f);
     renderer->setColor(1.0f, 1.0f, 1.0f, 0.5f);
 
     // Load Font
     renderer->loadFont("res/Inconsolata.ttf");
 
-    //spawner = new Spawner(glm::vec3(1, 1, 1), PLAYER);
-    player = new Player(renderer, glm::vec3(0, 0, 0), 25);
+    spawner = new Spawner(renderer, glm::vec3(1, 1, 1), PLAYER);
+    player = new Player(renderer, spawner->pos, 25);
     entities.push_back(player);
+    entities.push_back(spawner);
     /*
-       entities.push_back(spawner);
        Flock* f = new Flock();
        selectedFlock = f;
        for(int i = 0; i < 25; i++){
@@ -108,7 +106,7 @@ void GameLevel::render(){
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glClearColor(0.f,0.f,0.f,1.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    renderer->setCamera(player->pos.x, player->pos.y, 100);
+    renderer->setCamera(player->pos.x, player->pos.y, glm::length(player->vel) / 10.f + 30.f);
 
     renderer->pushMatrix();
     //renderCursor(renderer);
@@ -128,7 +126,6 @@ bool GameLevel::contains(glm::vec3 in, glm::vec3 a, glm::vec3 b){
 void GameLevel::renderCursor(Renderer* r){
     r->pushMatrix();
     r->setColor(cursor.r, cursor.g, cursor.b, cursor.a);
-    r->uploadModelView();
     glBegin(GL_QUADS);
     float h = 1;
     glVertex3f(cursor.pos.x - h/2, cursor.pos.y - h/2, 0);

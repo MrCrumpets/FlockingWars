@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Spawner.h
  *
@@ -6,27 +7,14 @@
  */
 class Flock;
 
-#ifndef SPAWNER_H_
-#define SPAWNER_H_
-
 #include "Entity.h"
 #include "Flock.h"
 #include "../Util/includes.h"
 #include "../Systems/Graphics/Renderer.h"
 #include <queue>
 
-const int numLines = 10;
-
-class Line : public Entity{
-    private:
-        float _constVel;
-    public:
-        Line(){}
-        Line(glm::vec3, glm::vec3);
-        void render();
-        void update(float dt);
-        void spawnBoids(){};
-        glm::vec3 center;
+struct Line {
+    glm::vec3 last_pos, pos;
 };
 
 class Spawner : public Entity {
@@ -44,5 +32,3 @@ class Spawner : public Entity {
         int lastSpawned;
         glm::vec3 screenPos;
 };
-
-#endif /* SPAWNER_H_ */

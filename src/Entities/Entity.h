@@ -31,9 +31,7 @@ class Entity {
 
 	std::list<Entity*> entityStack;
 
-	Entity(){
-		dead = false;
-	}
+	Entity() : dead(false), explodes(false), selected(false) { }
 
 	Entity(Renderer *r, glm::vec3 _pos) : renderer(r), pos(_pos) {}
 	virtual ~Entity(){}
