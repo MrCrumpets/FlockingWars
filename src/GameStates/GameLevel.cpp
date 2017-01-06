@@ -22,7 +22,7 @@ struct {
 } cursor;
 
 GameLevel::GameLevel(int width, int height) 
-    : width(width), height(height) {
+    : width(width), height(height), _im(50, 50, 1.5f) {
     camera.x = -width/2;
     camera.y = -width/2;
     camera.z = -1450;
@@ -109,8 +109,7 @@ void GameLevel::render(){
     renderer->setCamera(player->pos.x, player->pos.y, glm::length(player->vel) / 10.f + 30.f);
 
     renderer->pushMatrix();
-    //renderCursor(renderer);
-    //renderer->renderString(glm::vec3(0,0,0), "Player 1");
+    _im.render();
     for(auto e : entities){
         e->render();
     }

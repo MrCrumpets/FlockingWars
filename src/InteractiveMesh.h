@@ -1,3 +1,4 @@
+#pragma once
 /*
  * InteractiveMesh.h
  *
@@ -5,30 +6,22 @@
  *      Author: Nathan
  */
 
-#ifndef INTERACTIVEMESH_H_
-#define INTERACTIVEMESH_H_
 
 #include <glm/glm.hpp>
-#include "Util/includes.h"
+#include <memory>
+#include "Systems/Graphics/Renderer.h"
+#include "Systems/Graphics/Mesh.hpp"
 
-class MeshPoint{
-public:
-	float x, y, z, oldx, oldy, oldz, ix, iy, iz;
-	glm::vec3 normal;
-	bool moveable;
-	MeshPoint(float x, float y, float z);
-	void setPosition(float, float, float);
-	void update();
+class InteractiveMesh {
+    private:
+        std::unique_ptr<Mesh> _mesh;
+        int _rows, _cols;
+
+        std::vector<vertex> _points;
+    public:
+        InteractiveMesh(int rows, int cols, float gridSize);
+        void render();
+        void update();
+        void createImpulse(float, float, float);
+        ~InteractiveMesh() {};
 };
-class InteractiveMesh{
-public:
-	MeshPoint **points;
-	InteractiveMesh(int, int);
-	void render(bool threed);
-	void update();
-	double getNormal(double x, double y, glm::vec3 &normal);
-	double* getRotationMatrix(double x, double y);
-	void createImpulse(float, float, float);
-	virtual ~InteractiveMesh();
-};
-#endif /* INTERACTIVEMESH_H_ */

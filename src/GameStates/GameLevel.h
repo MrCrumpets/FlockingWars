@@ -17,6 +17,7 @@
 #include "../Entities/Player.h"
 #include "../Entities/Flock.h"
 #include "../Systems/InputManager.h"
+#include "../InteractiveMesh.h"
 
 using std::vector;
 
@@ -38,7 +39,8 @@ private:
 	Player* player;
 	Spawner* spawner;
 	glm::vec3 camera;
-	GLuint time, offsetUniform;
+        InteractiveMesh _im;
+
 	int width, height;
 };
 

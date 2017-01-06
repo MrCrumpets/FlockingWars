@@ -11,6 +11,7 @@ struct vertex {
 enum class MeshType {
     Triangles = GL_TRIANGLES,
     LineStrip = GL_LINE_STRIP,
+    Lines = GL_LINES
 };
 
 class Mesh {
