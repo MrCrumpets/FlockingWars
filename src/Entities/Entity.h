@@ -33,7 +33,7 @@ class Entity {
 
 	Entity() : dead(false), explodes(false), selected(false) { }
 
-	Entity(Renderer *r, glm::vec3 _pos) : renderer(r), pos(_pos) {}
+	Entity(Renderer *r, const glm::vec3 &_pos) : renderer(r), pos(_pos) {}
 	virtual ~Entity(){}
 
 	virtual void die(){dead = true;}

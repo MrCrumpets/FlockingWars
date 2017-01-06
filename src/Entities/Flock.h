@@ -1,38 +1,25 @@
-/*
- * Flock.h
- *
- * This was originally (way back when) a class used to simulate a flocking
- * algorithm. My current plan is to use it as a "squad" class.
- *
- * It will handle orders/commands and formations for a number of entities.
- *
- */
+#pragma once
 class Spawner;
-#ifndef FLOCK_H_
-#define FLOCK_H_
-
 
 #include "Entity.h"
-#include "../Util/includes.h"
 #include "../Systems/Graphics/Renderer.h"
-using std::vector;
-
+#include "../Systems/Graphics/Mesh.hpp"
 
 // These are tiny little ships that fly around and don't do much else. I
 // am not sure how much longer they'll be around before I replace them
 // with something more abstract.
 class Boid : public Entity {
-public:
-	Boid();
-	Boid(Renderer *r, glm::vec3 pos, int team);
-	void update(float dt);
-	void interact(Entity* e);
-	void render();
-	void die();
-	virtual ~Boid();
-	float minSpeed, maxSpeed, minSq, maxSq;
-	int rank;
-	float fear;
+    public:
+        Boid();
+        Boid(Renderer *r, const glm::vec3 &pos, int team);
+        void update(float dt);
+        void interact(Entity* e);
+        void render();
+        void die();
+        virtual ~Boid();
+        float minSpeed, maxSpeed, minSq, maxSq;
+        int rank;
+        float fear;
 };
 
 /**
@@ -40,16 +27,15 @@ public:
  */
 
 class Flock {
-public:
-	char tag; // For identification (ie. Alpha, Beta)
-	Flock();
-	void setTag(char t);
-	void addEntity(Entity* e);
-	void removeEntity(Entity* e);
-	void setObjective(glm::vec3 o);
-	bool update(float dt);
-	virtual ~Flock(){}
-	vector<Entity*> members;
+    public:
+        char tag; // For identification (ie. Alpha, Beta)
+        Flock();
+        void setTag(char t);
+        void addEntity(Entity* e);
+        void removeEntity(Entity* e);
+        void setObjective(const glm::vec3 &o);
+        int update(float dt);
+        virtual ~Flock(){}
+        std::vector<Entity*> members;
 };
 
-#endif /* FLOCK_H_ */

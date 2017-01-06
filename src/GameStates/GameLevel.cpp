@@ -42,16 +42,14 @@ void GameLevel::init(){
     player = new Player(renderer, spawner->pos, 25);
     entities.push_back(player);
     entities.push_back(spawner);
-    /*
-       Flock* f = new Flock();
-       selectedFlock = f;
-       for(int i = 0; i < 25; i++){
-       Boid* p = new Boid(glm::vec3(rand()%25, rand()%25, 0.0f), PLAYER);
-       entities.push_back(p);
-       f->addEntity(p);
-       }
-       flocks.push_back(f);
-       */
+    Flock* f = new Flock();
+    selectedFlock = f;
+    for(int i = 0; i < 25; i++){
+        Boid* p = new Boid(renderer, glm::vec3(rand()%50 + 50, rand()%50 + 50, 0.0f), PLAYER);
+        entities.push_back(p);
+        f->addEntity(p);
+    }
+    flocks.push_back(f);
 }
 
 GameState* GameLevel::update(float dt){
