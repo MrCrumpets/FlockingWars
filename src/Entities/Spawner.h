@@ -9,15 +9,18 @@ class Flock;
 
 #include "Entity.h"
 #include "Flock.h"
-#include "../Util/includes.h"
 #include "../Systems/Graphics/Renderer.h"
+#include "../Systems/Graphics/Mesh.hpp"
 #include <queue>
+#include <memory>
 
 struct Line {
     glm::vec3 last_pos, pos;
 };
 
 class Spawner : public Entity {
+    private:
+        std::unique_ptr<Mesh> _mesh;
     public:
         Spawner(Renderer *r, glm::vec3, int);
         void render();

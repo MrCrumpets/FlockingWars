@@ -38,7 +38,7 @@ static const std::vector<unsigned int> indices {
 Bullet::Bullet(Renderer *r, glm::vec3 pos, glm::vec3 initialVel, glm::vec3 orientation, 
         int bulletRange, unsigned char team)
 : Entity(r, pos), 
-    _mesh(vertices, indices, MeshType::LineStrip) {
+    _mesh(vertices, indices, DrawType::LineStrip) {
     dir = orientation;
     vel = initialVel;
     this->team = team;

@@ -31,23 +31,17 @@ Spawner::Spawner(Renderer *r, glm::vec3 _pos, int _team)
             color = glm::vec3(181, 40, 65);
         }
 
+        std::vector<glm::uint32> indices;
         for(size_t i = 0; i < numLines; ++i){
 	    lines.emplace_back(Line{glm::ballRand(radius), glm::ballRand(radius)});
+            indices.push_back(indices.size());
         }
-
-        glGenVertexArrays(1, &_vertex_array);
-        glBindVertexArray(_vertex_array);
-
-        // Copy Vertex Buffer Data
-        glGenBuffers(1, &_vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER,
-                lines.size() * sizeof(Line),
-                nullptr, GL_STREAM_DRAW);
-
-        // Set Shader Attributes
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid *) 0);
-        glEnableVertexAttribArray(0); // Vertex Positions
+        std::vector<vertex> vertices;
+        for(const auto &l : lines) {
+            vertices.emplace_back(vertex{l.last_pos});
+            vertices.emplace_back(vertex{l.pos});
+        }
+        _mesh = std::make_unique<Mesh>(vertices, indices, DrawType::Lines, MeshType::Streaming);
     }
 
 void Spawner::render(){
@@ -61,8 +55,7 @@ void Spawner::render(){
     // Draw lines
     renderer->translate(pos.x, pos.y, 0.0f);
     renderer->setColor(color.r, color.g, color.b, (sin(((timer/50.0)*(2*PI))/4)*0.2 + 0.8f)*255);
-    glBindVertexArray(_vertex_array);
-    glDrawArrays(GL_LINES, 0, 2 * lines.size());
+    _mesh->draw();
     renderer->popMatrix();
 }
 
@@ -76,9 +69,12 @@ void Spawner::update(float dt){
         l.last_pos = l.pos;
 	l.pos += vel*dt;
     }
-    glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(Line), NULL, GL_STREAM_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size() * sizeof(Line), &lines[0]);
+    std::vector<vertex> vertices;
+    for(const auto &l : lines) {
+        vertices.emplace_back(vertex{l.last_pos});
+        vertices.emplace_back(vertex{l.pos});
+    }
+    _mesh->update(vertices);
 
     if(team == ENEMY){
         money += moneyRate;

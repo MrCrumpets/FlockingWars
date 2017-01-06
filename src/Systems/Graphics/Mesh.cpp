@@ -4,8 +4,8 @@
 
 Mesh::Mesh(const std::vector<vertex> &vertices,
         const std::vector<GLuint> &indices,
-        MeshType type) 
-    : _vertices(vertices), _indices(indices), _type(type) {
+        DrawType drawType, MeshType meshType)
+    : _vertices(vertices), _indices(indices), _drawType(drawType), _meshType(meshType) {
     // Bind a Vertex Array Object
     glGenVertexArrays(1, &_vertex_array);
     glBindVertexArray(_vertex_array);
@@ -15,7 +15,7 @@ Mesh::Mesh(const std::vector<vertex> &vertices,
     glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER,
             _vertices.size() * sizeof(vertex),
-            &_vertices.front(), GL_STATIC_DRAW);
+            &_vertices.front(), static_cast<GLuint>(meshType));
 
     // Copy Index Buffer Data
     glGenBuffers(1, & _element_buffer);
@@ -30,14 +30,24 @@ Mesh::Mesh(const std::vector<vertex> &vertices,
 
     // Cleanup Buffers
     // Apparently deleting these buffers is okay because they are still referenced by the VAO
-    // and so will only get deleted when the VAO is deleted 
+    // and so will only get deleted when the VAO is deleted
     // --> One call to delete _vertex_array should be sufficient to free all the memory.
     glBindVertexArray(0);
-    glDeleteBuffers(1, & _vertex_buffer);
-    glDeleteBuffers(1, & _element_buffer);
+    if(_meshType == MeshType::Static) {
+        glDeleteBuffers(1, & _vertex_buffer);
+        glDeleteBuffers(1, & _element_buffer);
+    }
+}
+
+void Mesh::update(const std::vector<vertex> &vertices) {
+    glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER,
+            vertices.size() * sizeof(vertex),
+            nullptr, static_cast<GLuint>(_meshType));
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(vertex), &vertices.front());
 }
 
 void Mesh::draw() {
     glBindVertexArray(_vertex_array);
-    glDrawElements(static_cast<GLuint>(_type), _indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(static_cast<GLuint>(_drawType), _indices.size(), GL_UNSIGNED_INT, 0);
 }

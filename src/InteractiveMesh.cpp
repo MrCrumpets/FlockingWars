@@ -34,7 +34,7 @@ InteractiveMesh::InteractiveMesh(int rows, int cols, float gridSize) : _rows(row
         }
     }
 
-    _mesh.reset(new Mesh(_points, indices, MeshType::Lines));
+    _mesh = std::make_unique<Mesh>(_points, indices, DrawType::Lines);
 }
 
 /*
