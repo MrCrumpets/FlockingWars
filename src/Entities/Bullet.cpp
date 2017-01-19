@@ -36,21 +36,15 @@ static const std::vector<unsigned int> indices {
  */
 
 Bullet::Bullet(Renderer *r, glm::vec3 pos, glm::vec3 initialVel, glm::vec3 orientation, 
-        int bulletRange, unsigned char team)
+        int bulletRange, const std::string &team)
 : Entity(r, pos), 
     _mesh(vertices, indices, DrawType::LineStrip) {
     dir = orientation;
     vel = initialVel;
     this->team = team;
-    type = BULLET;
+    type = EntityType::Bullet;
     dead = false;
-
     maxEnergy = energy = (float)bulletRange;
-    if(team == PLAYER) {
-        color = glm::vec3(129, 204, 60);
-    } else {
-        color = glm::vec3(181, 40, 65);
-    }
 }
 
 /*
@@ -71,13 +65,7 @@ void Bullet::update(float dt){
 }
 
 void Bullet::render(){
-    renderer->pushMatrix();
-        renderer->setColor(color.r, color.g, color.b, (energy/maxEnergy));
-        renderer->translate(pos.x, pos.y, 0.0f);
-        renderer->scale(0.1f, 0.1f, 0.f);
-        renderer->rotate(glm::vec3(0.f, 1.f, 0.f), dir);
-        _mesh.draw();
-    renderer->popMatrix();
+    _mesh.draw();
 }
 /**
  * Determines whether this bullet intersects with the sphere described in the params
@@ -93,7 +81,7 @@ void Bullet::render(){
  */
 void Bullet::interact(Entity* e){
     if(e->team != team){
-        if(e->type != BOID){
+        if(e->type == EntityType::Boid){
             float xdif = ((pos.x - e->pos.x));
             float ydif = ((pos.y - e->pos.y));
             if((xdif * xdif) + (ydif * ydif) < 100){

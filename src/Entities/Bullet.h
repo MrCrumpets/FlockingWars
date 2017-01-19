@@ -7,7 +7,7 @@
 
 class Bullet: public Entity {
     public:
-        Bullet(Renderer *r, glm::vec3 pos, glm::vec3 initialVel, glm::vec3 orientation, int bulletRange, unsigned char team);
+        Bullet(Renderer *r, glm::vec3 pos, glm::vec3 initialVel, glm::vec3 orientation, int bulletRange, const std::string &team);
         void render();
         void update(float);
 

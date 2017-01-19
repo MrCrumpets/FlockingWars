@@ -32,8 +32,13 @@ void Flock::removeEntity(Entity* e){
 }
 
 int Flock::update(float dt){
-    for(unsigned i = 0; i < members.size(); i++){
-        members[i]->acc -= (members[i]->pos - orbit) * static_cast<float>((rand()%10)/10.f);
+    std::remove_if(
+            members.begin(),
+            members.end(),
+            [](Entity *e) { return e->dead; }
+            );
+    for(auto &m : members){
+        m->acc -= (m->pos - orbit) * static_cast<float>((rand()%10)/10.f);
     }
     return members.size();
 }
@@ -42,18 +47,13 @@ void Flock::setObjective(const glm::vec3 &o){
     orbit = o;
 }
 
-Boid::Boid(Renderer *r, const glm::vec3 &_pos, int _team)
+Boid::Boid(Renderer *r, const glm::vec3 &_pos, const std::string& _team)
     : Entity(r, _pos) {
         if(!boidMesh) {
             boidMesh = new Mesh(boidVertices, boidIndices);
         }
-        if(team == PLAYER)
-            color = glm::vec3(129, 204, 60);
-        else {
-            color = glm::vec3(181, 40, 65);
-        }
         team = _team;
-        type = BOID;
+        type = EntityType::Boid;
         explodes = true;
         minSpeed = 5;
         maxSpeed = rand()%45 + 30;
@@ -70,16 +70,13 @@ Boid::Boid(Renderer *r, const glm::vec3 &_pos, int _team)
     }
 
 void Boid::render(){
-    renderer->pushMatrix();
-    renderer->translate(pos.x, pos.y, 0.0f);
-    renderer->rotate(glm::vec3(1.f, 0.f, 0.f), dir);
     boidMesh->draw();
-    renderer->popMatrix();
 }
 
 void Boid::update(float dt){
-    if(health < 0)
+    if(health < 0) {
         die();
+    }
     maxSpeed = maxSpeed + fear;
     vel += acc * 33.f * dt;
 
@@ -109,7 +106,11 @@ void Boid::interact(Entity* e){
     glm::vec3 dist = pos - e->pos;
     float dsq = glm::dot(dist, dist);
     dist = glm::normalize(dist);
-    if(dsq <= interactZone)
+
+    if(e->team != team) {
+        health -= e->damage;
+    }
+    else if(dsq <= interactZone && e->type == EntityType::Boid)
     {
         float ratio = dsq/interactZone;
         if(ratio < repelThresh){
@@ -120,7 +121,7 @@ void Boid::interact(Entity* e){
         else if(ratio < alignThresh){
             float weight = (ratio - alignThresh)/(1.0f - alignThresh);
             float force = (1.0f - (cos(weight*PI*2) * -0.5f + 0.5f))*alignWeight;
-            acc += glm::normalize(e->vel) * force;
+            acc += glm::normalize(e->vel + glm::vec3(0.0001)) * force;
         }
         else {
             //Attract
@@ -129,7 +130,6 @@ void Boid::interact(Entity* e){
             acc -= dist*force;
         }
     }
-
 }
 
 void Boid::die(){

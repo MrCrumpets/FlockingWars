@@ -11,7 +11,7 @@ class Spawner;
 class Boid : public Entity {
     public:
         Boid();
-        Boid(Renderer *r, const glm::vec3 &pos, int team);
+        Boid(Renderer *r, const glm::vec3 &pos, const std::string &team);
         void update(float dt);
         void interact(Entity* e);
         void render();

@@ -13,6 +13,11 @@
 
 Renderer* renderer;
 Flock* selectedFlock;
+Spawner* playerSpawn;
+Player* player;
+
+static const glm::vec4 playerColor = { 129.f / 255.f, 204.f / 255.f, 60.f / 255.f, 1.f };
+static const glm::vec4 enemyColor = { 181.f / 255.f, 40.f / 255.f, 65.f / 255.f, 1.f };
 
 struct {
     glm::vec3 pos;
@@ -38,14 +43,15 @@ void GameLevel::init(){
     // Load Font
     renderer->loadFont("res/Inconsolata.ttf");
 
-    spawner = new Spawner(renderer, glm::vec3(1, 1, 1), PLAYER);
-    player = new Player(renderer, spawner->pos, 25);
+    playerSpawn = new Spawner(renderer, glm::vec3(1, 1, 0), "Player");
+    player = new Player(renderer, playerSpawn->pos, 25);
     entities.push_back(player);
-    entities.push_back(spawner);
+    entities.push_back(playerSpawn);
+    entities.push_back(new Spawner(renderer, glm::vec3(50, 50, 0), "Enemy"));
     Flock* f = new Flock();
     selectedFlock = f;
     for(int i = 0; i < 25; i++){
-        Boid* p = new Boid(renderer, glm::vec3(rand()%50 + 50, rand()%50 + 50, 0.0f), PLAYER);
+        Boid* p = new Boid(renderer, glm::vec3(rand()%50 + 50, rand()%50 + 50, 0.0f), "Enemy");
         entities.push_back(p);
         f->addEntity(p);
     }
@@ -74,26 +80,24 @@ GameState* GameLevel::update(float dt){
     }
     // Delete Dead Objects, Add New Ones
     std::vector<Entity*> newObjects;
-    auto it = std::begin(entities);
-    while(it != std::end(entities)){
-        while(!(*it)->entityStack.empty()){
-            newObjects.push_back((*it)->entityStack.front());
-            (*it)->entityStack.pop_front();
+    for(auto e : entities){
+        while(!e->entityStack.empty()){
+            newObjects.push_back(e->entityStack.front());
+            e->entityStack.pop_front();
         }
-        if((*it)->dead){
-            if((*it)->type == SHIP){
-                player->respawn(spawner->pos);
-                it++;
+        if(e->dead){
+            if(e->type == EntityType::Ship){
+                player->respawn(playerSpawn->pos);
             }
-            else{
-                delete *it;
-                it = entities.erase(it);
-            }
-        }
-        else {
-            it++;
         }
     }
+
+    entities.erase( std::remove_if(
+                entities.begin(), 
+                entities.end(), 
+                [](Entity *e) { return e->dead; }
+                ), entities.end() );
+
     for(unsigned int i = 0; i < newObjects.size(); i++){
         entities.push_back(newObjects[i]);
     }
@@ -107,9 +111,17 @@ void GameLevel::render(){
     renderer->setCamera(player->pos.x, player->pos.y, glm::length(player->vel) / 10.f + 80.f);
 
     renderer->pushMatrix();
-    _im.render();
     for(auto e : entities){
-        e->render();
+        renderer->pushMatrix();
+            if(e->team == "Player") {
+                renderer->setColor(playerColor);
+            } else {
+                renderer->setColor(enemyColor);
+            }
+            renderer->translate(e->pos);
+            renderer->rotate(glm::vec3(1.f, 0.f, 0.f), e->dir);
+            e->render();
+        renderer->popMatrix();
     }
     renderer->popMatrix();
 }
@@ -118,33 +130,6 @@ bool GameLevel::contains(glm::vec3 in, glm::vec3 a, glm::vec3 b){
     if((in.x - a.x)*(in.x - b.x) < 0 && (in.y - a.y)*(in.y - b.y) < 0)
         return true;
     return false;
-}
-
-void GameLevel::renderCursor(Renderer* r){
-    r->pushMatrix();
-    r->setColor(cursor.r, cursor.g, cursor.b, cursor.a);
-    glBegin(GL_QUADS);
-    float h = 1;
-    glVertex3f(cursor.pos.x - h/2, cursor.pos.y - h/2, 0);
-    glVertex3f(cursor.pos.x + h/2, cursor.pos.y - h/2, 0);
-    glVertex3f(cursor.pos.x + h/2, cursor.pos.y + h/2, 0);
-    glVertex3f(cursor.pos.x - h/2, cursor.pos.y + h/2, 0);
-    glEnd();
-    glBegin(GL_QUADS);
-    glVertex3f(cursor.pressed.x - h/2, cursor.pressed.y - h/2, 0);
-    glVertex3f(cursor.pressed.x + h/2, cursor.pressed.y - h/2, 0);
-    glVertex3f(cursor.pressed.x + h/2, cursor.pressed.y + h/2, 0);
-    glVertex3f(cursor.pressed.x - h/2, cursor.pressed.y + h/2, 0);
-    glEnd();
-    if(cursor.dragging){
-        glBegin(GL_QUADS);
-        glVertex3f(cursor.pressed.x, cursor.pressed.y, 0);
-        glVertex3f(cursor.pos.x, cursor.pressed.y, 0);
-        glVertex3f(cursor.pos.x, cursor.pos.y, 0);
-        glVertex3f(cursor.pressed.x, cursor.pos.y, 0);
-        glEnd();
-    }
-    r->popMatrix();
 }
 
 void GameLevel::handleInput(MappedInput& inputs, int x, int y, bool mouseDown){

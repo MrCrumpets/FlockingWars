@@ -1,37 +1,22 @@
-/*
- * Explosion.h
- *
- * Rudimentary particle system for rendering 2-D stylized explosions.
- *
- */
-
-#ifndef EXPLOSION_H_
-#define EXPLOSION_H_
+#pragma once
 
 #include "Entity.h"
-#include "../Util/includes.h"
-using std::vector;
+#include "../Systems/Graphics/Renderer.h"
 
-class Particle : public Entity{
-public:
-	Particle(float, float, float);
-	void update(float);
-	void render(bool);
-	void interact(Entity* e){}
-	virtual ~Particle();
-	short life;
-	glm::vec2 vsize;
-};
 class Explosion : public Entity{
-public:
-	Explosion(float, float);
-	void update(float);
-	void render(bool);
-	void interact(Entity* e){}
-	virtual ~Explosion();
-private:
-	bool overloaded;
-	static const int numParticles = 180;
-	vector<Particle> particles;
+    struct Particle {
+        glm::vec3 last_pos, pos;
+    };
+
+    public:
+        Explosion(Renderer* r, glm::vec3 pos);
+        void update(float);
+        void render();
+        void interact(Entity* e){}
+        virtual ~Explosion();
+    private:
+        int _numDead;
+        int _energy;
+        std::vector<Particle> particles;
+        std::vector<int> life;
 };
-#endif /* EXPLOSION_H_ */

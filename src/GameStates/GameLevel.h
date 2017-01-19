@@ -36,8 +36,6 @@ private:
 	bool contains(glm::vec3 x, glm::vec3 a, glm::vec3 b);
 	std::vector<Entity*> entities;
 	std::vector<Flock*> flocks;
-	Player* player;
-	Spawner* spawner;
 	glm::vec3 camera;
         InteractiveMesh _im;
 

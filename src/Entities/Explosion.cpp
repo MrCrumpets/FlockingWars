@@ -1,108 +1,85 @@
 /*
- * Explosion.cpp
+ * Explosio.cpp
  *
  */
 
 #include "Explosion.h"
+#include <glm/gtc/random.hpp>
 
-unsigned char colors[5][3] = {{181, 40, 65}, {255, 192, 81}, {255, 137, 57}, {232, 95, 77}, {89, 0, 81}};
+std::vector<glm::vec3> colors {
+    {181, 40, 65}, 
+    {255, 192, 81}, 
+    {255, 137, 57}, 
+    {232, 95, 77}, 
+    {89, 0, 81}
+};
 
-/**
- * Constructs an Explosion object and initializes all the Particle objects.
- *
- * @param _x
- * 		The x location of the explosion
- * @param _y
- * 		The y coord of the explosion
- */
-Explosion::Explosion(float _x, float _y) {
-	overloaded = false;
-	pos.x = _x;
-	pos.y = _y;
-	for(int i = 0; i < numParticles; i++)
-		particles.push_back(Particle(pos.x, pos.y, 360.0/numParticles*i));
-	dead = false;
-	type = EXPLOSION;
-	team = OTHER;
+static const int numParticles = 180;
+static const float radius = 15.f;
+static GLuint _vertex_array;
+static GLuint _vertex_buffer;
+
+Explosion::Explosion(Renderer *r, glm::vec3 pos)
+    : Entity(r, pos), _energy(10), _numDead(0) {
+    type = EntityType::Explosion;
+    team = "none";
+
+    for(size_t i = 0; i < numParticles; ++i){
+        particles.emplace_back(Particle{glm::vec3(), glm::ballRand(radius)});
+    }
+
+    glGenVertexArrays(1, &_vertex_array);
+    glBindVertexArray(_vertex_array);
+
+    // Copy Vertex Buffer Data
+    glGenBuffers(1, &_vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER,
+            particles.size() * sizeof(Particle),
+            nullptr, GL_STREAM_DRAW);
+
+    // Set Shader Attributes
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid *) 0);
+    glEnableVertexAttribArray(0); // Vertex Positions
 }
 /**
  * The update method updates the all the particles based on the dt since last update, and removes
  * dead particles
  *
  * @param dt
- * 		The time in seconds since update was last called
+ *              The time in seconds since update was last called
  */
 void Explosion::update(float dt){
-	for(unsigned i = 0; i < particles.size(); i++){
-		particles[i].update(dt);
-		if(particles[i].dead){
-			particles.erase(particles.begin()+i);
-			i--;
-		}
-	}
-	if(particles.size() == 0){
-		dead = true;
-	}
-}
-/**
- * Renders all the particles
- */
-void Explosion::render(bool threed){
+    return;
+    if(particles.size() == _numDead){
+        dead = true;
+        return;
+    }
 
-	glBegin(GL_LINES);
-	for(unsigned i = 0; i < particles.size(); i++)
-		particles[i].render(threed);
-	glEnd();
+    for(auto &p : particles){
+        auto vel = p.pos - p.last_pos;
+        p.last_pos = p.pos;
+	p.pos += 0.99f * vel * dt;
+        _energy -= dt;
+        if(_energy < 0) {
+            dead = true;
+            return;
+        }
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, particles.size() * sizeof(Particle), NULL, GL_STREAM_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, particles.size() * sizeof(Particle), &particles[0]);
+
+}
+
+void Explosion::render(){
+    glBindVertexArray(_vertex_array);
+    glDrawArrays(GL_LINES, 0, 2 * particles.size());
 }
 
 /**
  * Destructor, frees all the memory used by Particle objects and the particles[] array
  */
 Explosion::~Explosion() {
-}
-
-/**
- * Particle constructor, creates particle object
- *
- * @param _x
- * 		The initial x coord
- * @param _y
- * 		The initial y coord
- * @param angle
- * 		The angle of movement of the particle
- */
-Particle::Particle(float _x, float _y, float angle){
-	pos.x = _x;
-	pos.y = _y;
-	life = 30;
-	dead = false;
-	const int maxVel = 15;
-	vel = glm::vec3(cos(angle)*(rand()%maxVel), sin(angle)*(rand()%maxVel), 0.0f);
-	int random = rand()%5;
-	color = glm::vec3(colors[random][0], colors[random][1], colors[random][2]);
-}
-
-/**
- * The update method updates the particles position and velocity based on the dt parameter
- *
- * @param dt
- * 		The time in seconds since update was last called
- */
-void Particle::update(float dt){
-	vel *= 0.99;//Air resistance or friction? Even in space... it looks cooler this way.
-	pos += vel;
-	life--;
-	if(life < 0)
-		dead = true;
-}
-
-void Particle::render(bool threed){
-	float z = threed?0:0;
-	//glColor4f((r)/250.0, (g)/250.0, (b)/250.0, life/30.0);//Set the color with adjusted alpha so it fades out
-	glVertex3f(pos.x, pos.y, z);
-	glVertex3f(pos.x+(vel.x), pos.y+(vel.y), z);
-}
-
-Particle::~Particle(){
-
 }

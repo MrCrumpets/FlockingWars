@@ -16,16 +16,26 @@
 #include "../Systems/Graphics/Renderer.h"
 #include <list>
 
+
+enum class EntityType {
+    Ship,
+    Spawner,
+    Boid,
+    Bullet,
+    AttackBoid,
+    Explosion
+};
+
 class Entity {
     protected:
         Renderer *renderer;
     public:
 	glm::vec3 pos, oldpos, vel, acc, dir, angvel;
-        glm::vec3 color;
+        glm::vec4 color;
 	float damage, health, maxHealth;
 	bool dead, explodes, selected;
-	unsigned char type;
-	unsigned char team;
+	EntityType type;
+        std::string team;
 	float value;
 	std::string name;
 
@@ -36,22 +46,10 @@ class Entity {
 	Entity(Renderer *r, const glm::vec3 &_pos) : renderer(r), pos(_pos) {}
 	virtual ~Entity(){}
 
-	virtual void die(){dead = true;}
-	virtual void interact(Entity* e){}
-	virtual void update(float dt){}
-
-	// Default renderer for debugging purposes. Draws a white square
-	// at the position of the entity.
-	virtual void render(){
-		int rsize = 2;
-		glColor4ub(255, 255, 255, 255);
-		glBegin(GL_QUADS);
-		glVertex2f(pos.x-rsize, pos.y-rsize);
-		glVertex2f(pos.x-rsize, pos.y+rsize);
-		glVertex2f(pos.x+rsize, pos.y+rsize);
-		glVertex2f(pos.x+rsize, pos.y-rsize);
-		glEnd();
-	}
+	virtual void die(){ dead = true; }
+	virtual void interact(Entity* e) = 0;
+	virtual void update(float dt) = 0;
+	virtual void render() = 0;
 	double toRadians(float angle){
 		return angle * PIDIV180;
 	}

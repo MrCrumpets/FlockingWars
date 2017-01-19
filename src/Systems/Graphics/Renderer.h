@@ -26,7 +26,7 @@ class Renderer {
 	GLuint setUniform(const std::string& );
 	void disableShader();
 	glm::vec3 unProject(int x, int y, double z);
-	void setColor(glm::vec3 c);
+	void setColor(const glm::vec4 &c);
 	void setColor(float r, float g, float b, float a);
 	glm::vec3 getCursorPos(int x, int y);
 	void loadFont(const std::string &name);
@@ -40,7 +40,7 @@ class Renderer {
 	void setCamera(float x, float y, float z);
 	void pushMatrix();
 	glm::mat4& currentMatrix();
-	glm::mat4 translate(float x, float y , float z);
+	glm::mat4 translate(const glm::vec3 &pos);
 	glm::mat4 rotate(float angle, float x, float y, float z);
         glm::mat4 rotate(const glm::vec3 &from, const glm::vec3 &to);
 	glm::mat4 scale(float x, float y, float z);

@@ -25,8 +25,8 @@ static const float ACCEL = 10.f;
 
 Player::Player(Renderer *r, glm::vec3 _pos, float _size)
     : Entity(r, _pos), size(_size), _mesh(vertices, indices) {
-        type = SHIP;
-        team = PLAYER;
+        type = EntityType::Ship;
+        team = "Player";
         maxHealth = 500;
         maxHeat = 500;
         maxRotSpeed = 20;
@@ -40,21 +40,10 @@ Player::Player(Renderer *r, glm::vec3 _pos, float _size)
         dead = false;
         rotspeed = 0;
         velSpeed = 2500;
-        if(team == PLAYER) {
-            color = glm::vec3(129, 204, 60);
-        } else {
-            color = glm::vec3(181, 40, 65);
-        }
     }
 
 void Player::render(){
-    renderer->pushMatrix();
-    renderer->setColor(1.0f, 0.0f, 0.0f, 1.0f);
-    renderer->translate(pos.x, pos.y, 0.0f);
-    renderer->scale(3.f, 3.f, 0.f);
-    renderer->rotate(glm::vec3(1.f, 0.f, 0.f), dir);
-    _mesh.draw();
-    renderer->popMatrix();
+    emesh.draw();
 }
 
 /*
@@ -66,10 +55,11 @@ void Player::render(){
 void Player::update(float dt){
     if(health <= 0){
         dead = true;
-        entityStack.push_back(new Explosion(pos.x, pos.y));
+        entityStack.push_back(new Explosion(renderer, pos));
     }
-    if(gunHeat > 0)
+    if(gunHeat > 0) {
         gunHeat -= 33*dt;
+    }
     gunTimer -= dt;
     vel *= decay;
     vel += acc * dt;
@@ -93,14 +83,10 @@ void Player::respawn(glm::vec3 _pos){
 void Player::interact(Entity * e){
     glm::vec3 dist = pos - e->pos;
     float distance = glm::dot(dist,dist);
-    if(e->team == team){
-    }
-    else if(e->team != OTHER)
-    {
+    if(e->team != team){
         if(distance < 100){
             health -= e->damage;
-            entityStack.push_back(new Explosion(pos.x, pos.y));
-            //			e->health -= damage;
+            entityStack.push_back(new Explosion(renderer, pos));
         }
     }
 }
@@ -110,7 +96,7 @@ void Player::interact(Entity * e){
  */
 void Player::shoot(){
     if(gunHeat < maxHeat && gunTimer <= 0){
-        entityStack.push_back(new Bullet (renderer, pos, vel + dir*15.f, dir, bulletRange, team));
+        entityStack.push_back(new Bullet (renderer, pos, vel + dir*150.f, dir, bulletRange, team));
         gunHeat += 5;
         gunTimer = 30.0/1000;
     }

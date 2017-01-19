@@ -42,6 +42,10 @@ glm::vec3 Renderer::unProject(int x, int y, double z){
     return glm::unProject(glm::vec3(x, y, z), currentMatrix(), projection, viewport);
 }
 
+void Renderer::setColor(const glm::vec4 &color){
+    glUniform4fv(uniforms.color, 1, glm::value_ptr(color));
+}
+
 void Renderer::setColor(float r, float g, float b, float a){
     glUniform4f(uniforms.color, r, g, b, a);
 }
@@ -120,8 +124,8 @@ void Renderer::popMatrix(){
     }
 }
 
-glm::mat4 Renderer::translate(float x, float y, float z){
-    glm::mat4 t = glm::translate(glm::mat4(1.f), glm::vec3(x, y, z));
+glm::mat4 Renderer::translate(const glm::vec3 &pos){
+    glm::mat4 t = glm::translate(glm::mat4(1.f), pos);
     matrixStack.back() = matrixStack.back() * t;
     uploadModelView();
     return matrixStack.back();

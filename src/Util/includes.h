@@ -37,8 +37,6 @@ extern GLuint buttonTex;
 extern GLuint shipMesh;
 extern GLuint attackBoidMesh;
 extern int damaged;
-const unsigned char OTHER = 0, PLAYER = 1, ENEMY = 2;
-const unsigned char SHIP = 0, SPAWNER = 1, BOID = 2, BULLET = 3, ATTACKBOID = 4, EXPLOSION = 5;
 
 float inverseSqrt(float x);
 

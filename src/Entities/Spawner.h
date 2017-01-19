@@ -22,14 +22,15 @@ class Spawner : public Entity {
     private:
         std::unique_ptr<Mesh> _mesh;
     public:
-        Spawner(Renderer *r, glm::vec3, int);
+        Spawner(Renderer *r, glm::vec3 pos, const std::string &team);
         void render();
         void update(float dt);
+        void interact(Entity *) {};
         virtual ~Spawner();
         std::vector<Line> lines;
         glm::vec3 center;
         int timer;
-        std::queue<unsigned char> queue;
+        std::queue<EntityType> queue;
         float money;
         float moneyRate;
         int lastSpawned;
