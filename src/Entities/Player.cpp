@@ -43,7 +43,7 @@ Player::Player(Renderer *r, glm::vec3 _pos, float _size)
     }
 
 void Player::render(){
-    emesh.draw();
+    _mesh.draw();
 }
 
 /*
@@ -113,7 +113,7 @@ void Player::accelerate(float speed){
  *
  */
 void Player::rotate(float dir){
-    rotspeed += dir*maxRotSpeed*PIDIV180;
+    rotspeed += dir * glm::radians(maxRotSpeed);
 }
 
 Player::~Player() {

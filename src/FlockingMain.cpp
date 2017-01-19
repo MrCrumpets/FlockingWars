@@ -17,8 +17,6 @@
 #include "stdlib.h"
 #include "Util/init.h"
 
-sf::Window sfmlWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars", 
-        sf::Style::Default, sf::ContextSettings(32, 0, 0, 3, 3));
 
 bool fullscreen = false;
 
@@ -36,23 +34,14 @@ int gameMode = 0;
 int mousex = 0, mousey = 0;
 bool keys[323] = {false};
 
+sf::Window sfmlWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars",
+        sf::Style::Default, sf::ContextSettings(32, 0, 0, 3, 3));
 
 int volume = 0;
 
 GameState* currentState = NULL;
 
 InputManager inputManager;
-
-GLuint bullet_mesh;
-GLuint particle_DL;
-GLuint glowTex;
-GLuint buttonTex;
-GLuint shipMesh;
-GLuint attackBoidMesh;
-GLuint boidSquadronDL;
-GLuint logoTex;
-GLuint logoDL;
-
 void inputCallback (MappedInput& inputs);
 
 using namespace std;

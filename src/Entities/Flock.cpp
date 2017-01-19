@@ -120,13 +120,13 @@ void Boid::interact(Entity* e){
         }
         else if(ratio < alignThresh){
             float weight = (ratio - alignThresh)/(1.0f - alignThresh);
-            float force = (1.0f - (cos(weight*PI*2) * -0.5f + 0.5f))*alignWeight;
+            float force = (1.0f - (cos(weight*3.14*2) * -0.5f + 0.5f))*alignWeight;
             acc += glm::normalize(e->vel + glm::vec3(0.0001)) * force;
         }
         else {
             //Attract
             float weight = (ratio - repelThresh)/(1.0f - repelThresh);
-            float force = (1.0f - (cos(weight*PI*2) * -0.5f + 0.5f))*coheseWeight;
+            float force = (1.0f - (cos(weight*3.14*2) * -0.5f + 0.5f))*coheseWeight;
             acc -= dist*force;
         }
     }

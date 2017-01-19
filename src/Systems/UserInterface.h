@@ -8,12 +8,11 @@
 #ifndef USERINTERFACE_H_
 #define USERINTERFACE_H_
 
-#include "../util/includes.h"
-
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <functional>
 #include <string>
-using std::vector;
+#include <vector>
 
 struct Button;
 
@@ -31,7 +30,7 @@ struct Widget{
 	glm::vec3 colour;
 	float alpha;
 	bool visible;
-	vector<Widget *> widgets;
+        std::vector<Widget *> widgets;
 
 	virtual void draw();
 	void fadeTo (float finalAlpha);
@@ -40,8 +39,8 @@ struct Widget{
 	Button* addButton(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, std::string text, float scale);
 	void addTextBox(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, int &number, float scale);
 	void addTextBox(glm::vec2 _pos, glm::vec2 _size, glm::vec3 colour, float a, std::string s, float scale);
-	virtual bool checkHover(int mousex, int mousey);
-	virtual bool mouseUp();
+	virtual bool checkHover(const glm::vec2 &mouse);
+	virtual bool mouseUp(const glm::vec2 &mouse);
 	virtual void update();
 	~Widget();
 };
@@ -89,8 +88,8 @@ struct Button:Widget{
 	int padding;
 	std::string text;
 	GLuint textDl;
-	bool checkHover(int mousex, int mousey);
-	bool mouseUp();
+	bool checkHover(const glm::vec2 &mouse);
+	bool mouseUp(const glm::vec2 &mouse);
 	void draw();
 };
 
@@ -99,12 +98,12 @@ public:
 	UserInterface();
 	void reset();
 	void draw();
-	void update();
-	void mouseUp();
+	void update(const glm::vec2 &mouse);
+	void mouseUp(const glm::vec2 &mouse);
 	Widget* createWidget(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a);
 	void createProgressBar(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a, float &maxVal,float &var, bool axis);
 	void createButton(glm::vec2 pos, glm::vec2 size, glm::vec3 colour, float a);
-	vector<Widget*> widgets;
+        std::vector<Widget*> widgets;
 	virtual ~UserInterface();
 };
 
