@@ -8,6 +8,7 @@
  */
 
 #include "Player.h"
+#include <iostream>
 
 static const std::vector<vertex> vertices {
     {{ -0.5f, -0.5f, 0.0f }},
@@ -23,8 +24,8 @@ static const float decay = 0.95;
 static const float ACCEL = 10.f;
 
 
-Player::Player(Renderer *r, glm::vec3 _pos, float _size)
-    : Entity(r, _pos), size(_size), _mesh(vertices, indices) {
+Player::Player(Renderer *r, glm::vec3 pos, float _size)
+    : Entity(r, pos), size(_size), _mesh(vertices, indices) {
         type = EntityType::Ship;
         team = "Player";
         maxHealth = 500;

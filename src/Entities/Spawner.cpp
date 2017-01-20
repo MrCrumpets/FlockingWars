@@ -7,16 +7,16 @@
 
 #include "Spawner.h"
 #include <glm/gtc/random.hpp>
+#include <iostream>
 
 static const float radius = 15.f;
 static const int numLines = 100;
 static GLuint _vertex_array;
 static GLuint _vertex_buffer;
 
-Spawner::Spawner(Renderer *r, glm::vec3 _pos, const std::string &_team)
-    : Entity(r, _pos) {
-        center = _pos;
-        team = _team;
+Spawner::Spawner(Renderer *r, glm::vec3 pos, const std::string &team)
+    : Entity(r, pos) {
+        this->team = team;
         type = EntityType::Spawner;
         timer = 0;
         maxHealth = 120;
@@ -26,34 +26,27 @@ Spawner::Spawner(Renderer *r, glm::vec3 _pos, const std::string &_team)
         moneyRate = 0.25;
         lastSpawned = 0;
 
+        std::vector<glm::uint32> indices;
         for(size_t i = 0; i < numLines; ++i){
-	    lines.emplace_back(Line{center + glm::ballRand(radius), center + glm::ballRand(radius)});
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+	    lines.emplace_back(Line{pos + glm::ballRand(radius), pos + glm::ballRand(radius)});
+            _vertices.push_back({lines.back().last_pos});
+            _vertices.push_back({lines.back().pos});
         }
 
-        glGenVertexArrays(1, &_vertex_array);
-        glBindVertexArray(_vertex_array);
-
-        // Copy Vertex Buffer Data
-        glGenBuffers(1, &_vertex_buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
-        glBufferData(GL_ARRAY_BUFFER,
-                lines.size() * sizeof(Line),
-                nullptr, GL_STREAM_DRAW);
-
-        // Set Shader Attributes
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid *) 0);
-        glEnableVertexAttribArray(0); // Vertex Positions
+        _mesh = std::make_unique<Mesh>(_vertices, indices, DrawType::Lines, MeshType::Streaming);
     }
 
 void Spawner::render(){
-    glBindVertexArray(_vertex_array);
-    glDrawArrays(GL_LINES, 0, 2 * lines.size());
+    _mesh->draw();
 }
 
 void Spawner::update(float dt){
     if(health <= 0)
         dead = true;
 
+    int line_idx = 0;
     // Update lines
     for(auto &l : lines){
         auto vel = l.pos - l.last_pos;
@@ -61,10 +54,11 @@ void Spawner::update(float dt){
 	vel = glm::normalize(vel + acc*dt) * 15.f;
         l.last_pos = l.pos;
 	l.pos += vel*dt;
+        _vertices[line_idx++] = { l.last_pos };
+        _vertices[line_idx++] = { l.pos };
     }
-    glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, lines.size() * sizeof(Line), NULL, GL_STREAM_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, lines.size() * sizeof(Line), &lines[0]);
+
+    _mesh->update(_vertices);
 
     if(team == "Enemy"){
         money += moneyRate;

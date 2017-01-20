@@ -30,6 +30,7 @@ class Entity {
         Renderer *renderer;
     public:
 	glm::vec3 pos, oldpos, vel, acc, dir;
+	glm::vec3 scale;
         glm::vec4 color;
 	float damage, health, maxHealth;
 	bool dead, explodes, selected;

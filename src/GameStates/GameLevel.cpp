@@ -9,6 +9,7 @@
  */
 
 #include "GameLevel.h"
+#include "glm/ext.hpp"
 #include "../Systems/Graphics/Renderer.h"
 
 Renderer* renderer;
@@ -43,7 +44,7 @@ void GameLevel::init(){
     // Load Font
     renderer->loadFont("res/Inconsolata.ttf");
 
-    playerSpawn = new Spawner(renderer, glm::vec3(1, 1, 0), "Player");
+    playerSpawn = new Spawner(renderer, glm::vec3(0, 0, 0), "Player");
     player = new Player(renderer, playerSpawn->pos, 25);
     entities.push_back(player);
     entities.push_back(playerSpawn);
@@ -108,9 +109,8 @@ void GameLevel::render(){
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glClearColor(0.f,0.f,0.f,1.f);
     glClear(GL_COLOR_BUFFER_BIT);
-    renderer->setCamera(player->pos.x, player->pos.y, glm::length(player->vel) / 10.f + 80.f);
+    renderer->setCamera(player->pos.x, player->pos.y, glm::length(player->vel) / 10.f + 150.f);
 
-    renderer->pushMatrix();
     for(auto e : entities){
         renderer->pushMatrix();
             if(e->team == "Player") {
@@ -123,7 +123,6 @@ void GameLevel::render(){
             e->render();
         renderer->popMatrix();
     }
-    renderer->popMatrix();
 }
 
 bool GameLevel::contains(glm::vec3 in, glm::vec3 a, glm::vec3 b){

@@ -21,6 +21,7 @@ struct Line {
 class Spawner : public Entity {
     private:
         std::unique_ptr<Mesh> _mesh;
+        std::vector<vertex> _vertices;
     public:
         Spawner(Renderer *r, glm::vec3 pos, const std::string &team);
         void render();
@@ -28,7 +29,6 @@ class Spawner : public Entity {
         void interact(Entity *) {};
         virtual ~Spawner();
         std::vector<Line> lines;
-        glm::vec3 center;
         int timer;
         std::queue<EntityType> queue;
         float money;

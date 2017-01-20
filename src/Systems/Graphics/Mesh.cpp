@@ -39,12 +39,13 @@ Mesh::Mesh(const std::vector<vertex> &vertices,
     }
 }
 
-void Mesh::update(const std::vector<vertex> &vertices) {
+void Mesh::update(std::vector<vertex> &newVertices) {
+    std::swap(newVertices, _vertices);
     glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER,
-            vertices.size() * sizeof(vertex),
+            _vertices.size() * sizeof(vertex),
             nullptr, static_cast<GLuint>(_meshType));
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(vertex), &vertices.front());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, _vertices.size() * sizeof(vertex), &_vertices.front());
 }
 
 void Mesh::draw() {

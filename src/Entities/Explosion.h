@@ -2,10 +2,12 @@
 
 #include "Entity.h"
 #include "../Systems/Graphics/Renderer.h"
+#include "../Systems/Graphics/Mesh.hpp"
 
 class Explosion : public Entity{
     struct Particle {
         glm::vec3 last_pos, pos;
+        float energy;
     };
 
     public:
@@ -18,5 +20,6 @@ class Explosion : public Entity{
         int _numDead;
         int _energy;
         std::vector<Particle> particles;
-        std::vector<int> life;
+        std::unique_ptr<Mesh> _mesh;
+        std::vector<vertex> _vertices;
 };

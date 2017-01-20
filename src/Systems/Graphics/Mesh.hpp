@@ -27,7 +27,7 @@ class Mesh {
 
          Mesh(const std::vector<vertex> &vertices, const std::vector<GLuint> &indices, DrawType = DrawType::Triangles, MeshType = MeshType::Static);
         void draw();
-        void update(const std::vector<vertex> &updatedVertices);
+        void update(std::vector<vertex> &updatedVertices);
    private:
         std::vector<vertex> _vertices;
         std::vector<GLuint> _indices;
