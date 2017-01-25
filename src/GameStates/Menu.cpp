@@ -29,7 +29,7 @@ void Menu::newGame(){
 
 GameState* Menu::update(float dt){
     if(true){
-        return new GameLevel(width, height);
+        return new GameLevel();
     }
     return this;
 }
