@@ -1,13 +1,3 @@
-/*
- * GameLevel.cpp
- *
- * GameState for the actual game world. It stores, updates, and renders
- * all the entities in the level.
- *
- * I am planning on making it load a level configuration from a text
- * file in order to have pre-designed and varied levels.
- */
-
 #include <imgui/imgui.h>
 #include "glm/ext.hpp"
 
@@ -17,7 +7,13 @@ float color[3] = { 0.f, 0.f, 0.f };
 std::vector<char> buff;
 
 
-GameLevel::GameLevel() {
+GameLevel::GameLevel(sol::state &lua) 
+    : _lua(lua) , _em(lua)
+{ 
+    lua["createEntity"] = [this](){
+	auto &e = _em.createEntity();
+	return e;
+    };
 }
 
 void GameLevel::init(){
@@ -31,8 +27,6 @@ void GameLevel::render(){
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glClearColor(color[0], color[1], color[2], 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
-
-    ImGui::ShowTestWindow();
 }
 
 void GameLevel::handleInput(MappedInput& inputs, int x, int y, bool mouseDown){

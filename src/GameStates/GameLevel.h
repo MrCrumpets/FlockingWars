@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm/fwd.hpp>
+#include <sol.hpp>
 
 #include "GameState.h"
 #include "../EntityManager.hpp"
@@ -8,7 +9,7 @@
 
 class GameLevel: public GameState {
     public:
-        GameLevel();
+        GameLevel(sol::state &lua);
         void pause() {};
         void resume() {};
         void handleInput(MappedInput& input, int x, int y, bool mouseDown);
@@ -18,4 +19,5 @@ class GameLevel: public GameState {
         virtual ~GameLevel();
     private:
         EntityManager _em;
+        sol::state &_lua;
 };

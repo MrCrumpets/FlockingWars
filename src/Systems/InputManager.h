@@ -55,15 +55,12 @@ class InputManager {
 		InputManager();
 		~InputManager();
 	// Event Polling
-	public:
 		void pollEvents();
 	// Input Dispatching
-	public:
 		void dispatchInput() const;
 		void clear(void);
 		void registerCallback(InputCallback callback, int priority);
 	// Context Management
-	public:
 		void pushContext(const std::string& name);
 		void popContext();
 		void setRawInputState(int button, bool pressed);

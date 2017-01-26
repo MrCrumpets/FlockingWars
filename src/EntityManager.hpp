@@ -5,15 +5,25 @@
 
 class EntityManager {
     public:
-        EntityManager() : _entityCounter(0) {}
+        EntityManager(sol::state &lua) : _lua(lua), _entityCounter(0) {
+                _lua.open_libraries();
+                _lua.new_usertype<Entity>("Entity",
+                        "getName", &Entity::getType,
+                        "setName", &Entity::setType,
+                        "getId", &Entity::getId);
+
+                _lua.do_file("config/safe_ref.lua");
+        }
 
         Entity& createEntity() {
-            auto id = _entityCounter++;
-            auto pair = _entities.emplace(id, std::make_unique<Entity>(id));
-            auto& entity = *(pair.first)->second;
-            _lua["createHandle"](entity);
-            return entity;
-        }
+	    auto id = _entityCounter;
+	    ++_entityCounter;
+	    auto inserted = _entities.emplace(id, std::make_unique<Entity>(id));
+	    auto it = inserted.first; // iterator to created id/Entity pair
+	    auto& e = *it->second; // created entity
+	    _lua["createHandle"](e);
+	    return e;
+	}
         void removeEntity(const EntityId id) {
 	    _lua["onEntityRemoved"](id);
             _entities.erase(id);
@@ -21,5 +31,5 @@ class EntityManager {
     private:
         std::unordered_map<EntityId, std::unique_ptr<Entity>> _entities;
         EntityId _entityCounter;
-        sol::state _lua;
+        sol::state &_lua;
 };

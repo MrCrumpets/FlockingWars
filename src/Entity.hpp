@@ -24,7 +24,7 @@ using EntityId = uint32_t;
 
 class Entity {
     public:
-        Entity(EntityId id) : _id(id) {}
+        explicit Entity(EntityId id) : _id(id) {}
 
         void addComponent(const std::type_index &t, Component *c) {
             _components[t] = c;

@@ -63,6 +63,7 @@ namespace ImGui
 
             // init rendering
             io.DisplaySize = static_cast<sf::Vector2f>(target.getSize());
+            io.FontGlobalScale = 2.f;
             io.RenderDrawListsFn = RenderDrawLists; // set render callback
         }
 

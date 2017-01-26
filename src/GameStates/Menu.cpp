@@ -28,9 +28,6 @@ void Menu::newGame(){
 }
 
 GameState* Menu::update(float dt){
-    if(true){
-        return new GameLevel();
-    }
     return this;
 }
 

@@ -9,8 +9,10 @@
 #include <SFML/Window.hpp>
 #include <imgui/imgui.h>
 #include <imgui/imgui-sfml.h>
+#include <sol.hpp>
 
 #include "Systems/InputManager.h"
+#include "Systems/console.hpp"
 #include "Systems/Graphics/Shaders/shaders.h"
 #include "GameStates/GameState.h"
 #include "GameStates/GameLevel.h"
@@ -19,34 +21,22 @@
 #include "stdlib.h"
 #include "Util/init.h"
 
-
-bool fullscreen = false;
-
-int SCREEN_WIDTH = 1920;
-int SCREEN_HEIGHT = 1080;
-int uiWidth = 1024, uiHeight = 600;
-const int SCREEN_BPP = 24;
-const int FPS = 30;
+static const int SCREEN_WIDTH = 1920;
+static const int SCREEN_HEIGHT = 1080;
+static bool show_console = false;
 bool quit = false;
-bool DEBUG = false;
-bool joystick = false;
-bool mainMenuBuilt = false;
-const int MAINMENU = 0, GAMEMODE = 1, STOREMODE = 0;
-int gameMode = 0;
 int mousex = 0, mousey = 0;
-bool keys[323] = {false};
+static bool keys[323] = { false };
 
 sf::Window window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "FlockingWars",
         sf::Style::Default, sf::ContextSettings(32, 0, 0, 3, 3));
 
-int volume = 0;
-
-GameState* currentState = NULL;
+std::unique_ptr<GameState> currentState;
+static sol::state lua;
 
 InputManager inputManager;
 void inputCallback (MappedInput& inputs);
-
-using namespace std;
+std::unique_ptr<Console> console;
 
 // Initializes OpenGl, Shader Extensions.
 bool init() {
@@ -63,8 +53,16 @@ bool init() {
 
     // Fire up dear imgui
     ImGui::SFML::Init(window);
-
-
+    console = std::make_unique<Console>();
+    console->registerCallback(
+	    [] (const std::string &command) {
+		try {
+		    lua.script(command);
+		}
+		catch (const sol::error& e) {
+		    std::cerr << "Caught: " << e.what() << std::endl;
+		}
+	    });
     // Input Setup
     inputManager.registerCallback(inputCallback, 0);
     inputManager.pushContext("gameplay");
@@ -77,7 +75,7 @@ void inputCallback (MappedInput& inputs){
     if(inputs.actions.find("quit") != inputs.actions.end()){
         quit = true;
     }
-    if(currentState != NULL){
+    if(currentState != nullptr){
         currentState->handleInput(inputs, mousex, mousey, false);
     }
 }
@@ -97,6 +95,7 @@ void pollEvents(){
                 break;
             case sf::Event::KeyPressed:
                 keys[event.key.code] = true;
+                if(event.key.code == 56) show_console = !show_console;
                 break;
             case sf::Event::KeyReleased:
                 inputManager.setRawInputState(event.key.code, false); // Tell inputManager that the key was released.
@@ -121,22 +120,20 @@ int main() {
         return 1;
     }
 
-    currentState = new GameLevel();
+    currentState = std::make_unique<GameLevel>(lua);
     currentState->init();
     sf::Time deltatime;
     sf::Clock clock;
-
-    while (quit == false) {
+    while (!quit) {
         sf::Time timeDelta = clock.restart();
         pollEvents();
-        GameState* newState = currentState->update(timeDelta.asSeconds());
         ImGui::SFML::Update(window, timeDelta);
         inputManager.dispatchInput();
         inputManager.clear();
 
-        if(newState != currentState){
-            delete currentState;
-            currentState = newState;
+        GameState* newState = currentState->update(timeDelta.asSeconds());
+        if(newState != currentState.get()){
+            currentState.reset(newState);
             currentState->init();
         }
 
@@ -146,7 +143,13 @@ int main() {
             std::cerr << "Post-render OpenGL error: " << err << std::endl;
         }
 
+
         currentState->render();
+
+        if(show_console) {
+            console->draw("console", &show_console);
+        }
+
         ImGui::Render();
 
         //Sleep the time remaining for a constant framerate to be maintained
