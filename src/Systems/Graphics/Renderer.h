@@ -43,7 +43,7 @@ class Renderer {
 	glm::mat4 translate(const glm::vec3 &pos);
 	glm::mat4 rotate(float angle, float x, float y, float z);
         glm::mat4 rotate(const glm::vec3 &from, const glm::vec3 &to);
-	glm::mat4 scale(float x, float y, float z);
+	glm::mat4 scale(const glm::vec3 &scale);
 	void loadIdentity();
 	void popMatrix();
 

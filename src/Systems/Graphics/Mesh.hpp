@@ -1,7 +1,7 @@
 #pragma once
 #include "GL/glew.h"
 #include <glm/glm.hpp>
-
+#include <iostream>
 #include <vector>
 
 struct vertex {
@@ -20,9 +20,21 @@ enum class MeshType {
     Streaming = GL_STREAM_DRAW
 };
 
+static struct {
+    const std::vector<vertex> vertices {
+        {{ -0.5f, -0.5f, 0.0f }},
+            {{ 0.5f,  0.0f, 0.0f }},
+            {{ 0.0f,  0.0f, 0.4f }},
+            {{-0.5f,  0.5f, 0.0f }},
+            {{-0.3f,  0.0f, 0.0f }}
+    };
+    const std::vector<unsigned int> indices { 0, 1, 2, 1, 2, 3, 3, 2, 4, 4, 2, 0 };
+} DefaultMesh;
+
 class Mesh {
     public:
-         Mesh() { glGenVertexArrays(1, &_vertex_array); }
+         Mesh() : Mesh (DefaultMesh.vertices, DefaultMesh.indices) {}
+
         ~Mesh() { glDeleteVertexArrays(1, &_vertex_array); }
 
          Mesh(const std::vector<vertex> &vertices, const std::vector<GLuint> &indices, DrawType = DrawType::Triangles, MeshType = MeshType::Static);

@@ -6,12 +6,17 @@
 float color[3] = { 0.f, 0.f, 0.f };
 std::vector<char> buff;
 
-
-GameLevel::GameLevel(sol::state &lua) 
+GameLevel::GameLevel(sol::state &lua)
     : _lua(lua) , _em(lua)
 { 
+    // Instantiate sub-systems (rendering, physics, ..)
+    _systems["physics"] = (std::make_unique<PhysicsSystem>());
+    _systems["graphics"] =  (std::make_unique<GraphicsSystem>(1920, 1080));
+
     lua["createEntity"] = [this](){
 	auto &e = _em.createEntity();
+        e.addComponent<GraphicsComponent*>(_systems["graphics"]->getComponent());
+        e.addComponent<PhysicsComponent*>(_systems["physics"]->getComponent());
 	return e;
     };
 }
@@ -20,13 +25,13 @@ void GameLevel::init(){
 }
 
 GameState* GameLevel::update(float dt){
+    for(auto &system : _systems) {
+        system.second->update(dt);
+    }
     return this;
 }
 
 void GameLevel::render(){
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    glClearColor(color[0], color[1], color[2], 1.f);
-    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void GameLevel::handleInput(MappedInput& inputs, int x, int y, bool mouseDown){

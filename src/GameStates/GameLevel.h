@@ -19,5 +19,6 @@ class GameLevel: public GameState {
         virtual ~GameLevel();
     private:
         EntityManager _em;
+        std::map<std::string, std::unique_ptr<System>> _systems;
         sol::state &_lua;
 };

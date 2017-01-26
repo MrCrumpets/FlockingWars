@@ -146,10 +146,10 @@ glm::mat4 Renderer::rotate(float angle, float x, float y, float z){
     return matrixStack.back();
 }
 
-glm::mat4 Renderer::scale(float x, float y, float z){
+glm::mat4 Renderer::scale(const glm::vec3 &scale){
     glm::mat4 t = glm::scale(
             glm::mat4(1.0f),
-            glm::vec3(x, y, z));
+            scale);
     matrixStack.back() = matrixStack.back() * t;
     uploadModelView();
     return matrixStack.back();
