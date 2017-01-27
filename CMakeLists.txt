@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 14) # C++14!
 set(CMAKE_CXX_STANDARD_REQUIRED ON) #...is required...
 set(CMAKE_CXX_EXTENSIONS OFF) #...without compiler extensions like gnu++11
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE EXT_FILES ${EXT_SOURCE_DIR}/*.cpp)
