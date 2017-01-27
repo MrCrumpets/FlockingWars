@@ -20,6 +20,24 @@ class System {
         virtual ~System() {}
 };
 
+
+template <typename T>
+class SystemImpl : public System{
+    public:
+        virtual void update(float dt) = 0;
+        Component* getComponent(EntityId = -1) {
+            if(_avail_component >= _components.size()) {
+                _components.emplace_back();
+                ++_avail_component;
+            }
+            return &_components[_avail_component++];
+        }
+        virtual ~SystemImpl() {}
+    protected:
+        size_t _avail_component;
+        std::vector<T> _components;
+};
+
 class PhysicsComponent : public Component {
     friend class PhysicsSystem;
     glm::vec3 pos, vel, acc;
@@ -27,7 +45,7 @@ class PhysicsComponent : public Component {
     float mass; // kg
 };
 
-class PhysicsSystem : public System {
+class PhysicsSystem : public SystemImpl<PhysicsComponent> {
     static constexpr float decay = 0.9f;
     static constexpr float max_velocity = 200.f; // m/s
     public:
@@ -44,17 +62,6 @@ class PhysicsSystem : public System {
               }
             }
         }
-
-        Component* getComponent(EntityId = -1) {
-            if(_avail_component >= _components.size()) {
-                _components.emplace_back();
-                ++_avail_component;
-            }
-            return &_components[_avail_component++];
-        }
-    private:
-        size_t _avail_component;
-        std::vector<PhysicsComponent> _components;
 };
 
 class GraphicsComponent : public Component {
@@ -63,7 +70,7 @@ class GraphicsComponent : public Component {
     glm::vec4 color = { 129.f / 255.f, 204.f / 255.f, 60.f / 255.f, 1.f };
 };
 
-class GraphicsSystem : public System {
+class GraphicsSystem : public SystemImpl<GraphicsComponent> {
     public:
         GraphicsSystem(int width, int height) : _r(std::make_unique<Renderer>(width, height)) {
             _r->setCamera(0.5f, 0.5f, 10.f);
@@ -85,18 +92,8 @@ class GraphicsSystem : public System {
             }
         }
 
-        Component* getComponent(EntityId = -1) {
-            if(_avail_component >= _components.size()) {
-                _components.emplace_back();
-                ++_avail_component;
-            }
-            return &_components[_avail_component++];
-        }
-
     private:
-        std::vector<GraphicsComponent> _components;
         std::unique_ptr<Renderer> _r;
-        size_t _avail_component;
 };
 
 class Entity {

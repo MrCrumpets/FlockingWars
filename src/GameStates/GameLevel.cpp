@@ -11,7 +11,7 @@ GameLevel::GameLevel(sol::state &lua)
 { 
     // Instantiate sub-systems (rendering, physics, ..)
     _systems["physics"] = (std::make_unique<PhysicsSystem>());
-    _systems["graphics"] =  (std::make_unique<GraphicsSystem>(1920, 1080));
+    _systems["graphics"] = (std::make_unique<GraphicsSystem>(1920, 1080));
 
     lua["createEntity"] = [this](){
 	auto &e = _em.createEntity();
